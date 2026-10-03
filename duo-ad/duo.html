@@ -1,0 +1,386 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>iPhone Duo Ad</title>
+<style>
+@font-face{font-family:"Inter";src:url("../spotify-ad/inter.woff2") format("woff2");font-weight:100 900;}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#000}
+body{font-family:"Inter",sans-serif;color:#f5f5f7;-webkit-font-smoothing:antialiased}
+.abs{position:absolute}
+#S{position:absolute;inset:0;overflow:hidden;background:#000}
+.layer{position:absolute;inset:0;pointer-events:none}
+.t{position:absolute;left:0;width:1080px;text-align:center;white-space:nowrap}
+.h1{font-weight:700;font-size:120px;letter-spacing:-5px;line-height:1.02}
+.h2{font-weight:700;font-size:84px;letter-spacing:-3px;line-height:1.05}
+.h3{font-weight:600;font-size:46px;letter-spacing:-1px;color:#a1a1a6}
+.grad{background:linear-gradient(100deg,#f5f5f7 0%,#c9d6ff 40%,#8fa8ff 60%,#f5f5f7 100%);-webkit-background-clip:text;color:transparent}
+.gold{background:linear-gradient(100deg,#fff6e0,#ffd27a 50%,#ff9f43);-webkit-background-clip:text;color:transparent}
+.mask{overflow:hidden;display:block}
+.mask>span{display:inline-block}
+
+/* ---- phone rig ---- */
+.stage3d{position:absolute;left:0;top:0;width:1080px;height:1920px;perspective:2400px;perspective-origin:540px 860px}
+.rig{position:absolute;left:210px;top:610px;width:660px;height:500px;transform-style:preserve-3d}
+.half{position:absolute;top:0;width:330px;height:500px;transform-style:preserve-3d}
+.half.L{left:0}
+.half.R{left:330px;transform-origin:0 50% 6px}
+.face{position:absolute;inset:0;backface-visibility:hidden;overflow:hidden}
+.half.L .front{border-radius:46px 0 0 46px;transform:translateZ(6px)}
+.half.R .front{border-radius:0 46px 46px 0;transform:translateZ(6px)}
+.half.L .back{border-radius:0 46px 46px 0;transform:rotateY(180deg) translateZ(6px)}
+.half.R .back{border-radius:46px 0 0 46px;transform:rotateY(180deg) translateZ(-6px)}
+.edge{position:absolute;top:18px;width:12px;height:464px;backface-visibility:visible;border-radius:6px}
+.half.L .edge{left:-6px;transform:rotateY(-90deg)}
+.half.R .edge{left:324px;transform:rotateY(90deg)}
+.bez{position:absolute;inset:0;padding:9px}
+.bez>.in{position:absolute;inset:9px;overflow:hidden}
+.half.L .front .bez>.in{border-radius:38px 0 0 38px;right:0}
+.half.R .front .bez>.in{border-radius:0 38px 38px 0;left:0}
+.half.R .back .bez>.in{border-radius:38px}
+.scr{position:absolute;top:0;width:642px;height:482px}
+.half.L .scr{left:0}
+.half.R .scr{left:-321px}
+.wall{position:absolute;inset:0}
+.blob{position:absolute;border-radius:50%;filter:blur(30px)}
+.star{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff}
+.sb{position:absolute;top:14px;font:600 14px Inter;color:#fff}
+.split{position:absolute;inset:0;opacity:0;background:#000}
+.pane{position:absolute;top:0;height:482px;border-radius:22px;overflow:hidden}
+.bub{position:absolute;max-width:230px;padding:10px 16px;border-radius:20px;font:500 16px/21px Inter}
+.crease{position:absolute;left:320px;top:0;width:2px;height:482px;background:linear-gradient(90deg,rgba(0,0,0,.35),rgba(255,255,255,.25))}
+.sheen{position:absolute;top:-100px;width:160px;height:700px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.22),transparent);transform:rotate(18deg)}
+.plate{position:absolute;left:22px;top:22px;width:150px;height:150px;border-radius:40px}
+.lens{position:absolute;width:62px;height:62px;border-radius:50%;background:radial-gradient(circle at 50% 50%,#0d1a33 0 30%,#1b2b4f 31% 45%,#05070c 46% 62%,#3a3f4a 63% 70%,#15171c 71%);box-shadow:0 0 0 4px rgba(0,0,0,.35),inset 0 0 6px rgba(255,255,255,.2)}
+.lens:after{content:"";position:absolute;left:18px;top:14px;width:12px;height:8px;border-radius:50%;background:rgba(160,200,255,.55);transform:rotate(-30deg)}
+
+/* ---- 2D scene bits ---- */
+.card{position:absolute;border-radius:36px;background:linear-gradient(160deg,#1c1c1e,#111113);border:1px solid #2c2c2e}
+.pill{display:inline-block;border:2px solid #3a3a3c;border-radius:40px;padding:12px 28px;font:600 30px Inter;color:#d2d2d7}
+#flash{position:absolute;inset:0;background:#fff;opacity:0}
+#vign{position:absolute;inset:0;background:radial-gradient(1100px 1500px at 50% 45%,transparent 55%,rgba(0,0,0,.65))}
+</style>
+</head>
+<body>
+<div id="S">
+  <div class="layer" id="bgGlow"></div>
+  <div class="layer" id="L_chip"></div>
+  <div class="layer" id="L_hinge"></div>
+  <div class="layer" id="L_stats"></div>
+  <div class="stage3d" id="stage3d"></div>
+  <div class="layer" id="L_cam"></div>
+  <div class="layer" id="L_text"></div>
+  <div id="vign" class="layer"></div>
+  <div id="flash"></div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const P=(t,a,b)=>clamp((t-a)/(b-a));
+const lerp=(a,b,x)=>a+(b-a)*x;
+const eo=x=>1-Math.pow(1-x,3);
+const eio=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;
+const ex=x=>x>=1?1:1-Math.pow(2,-10*x);
+const exio=x=>x<=0?0:x>=1?1:x<.5?Math.pow(2,20*x-10)/2:(2-Math.pow(2,-20*x+10))/2;
+const eb=x=>{const c1=1.6,c3=c1+1;return 1+c3*Math.pow(x-1,3)+c1*Math.pow(x-1,2)};
+const BEAT=.5, pulse=t=>t<7?0:Math.exp(-(((t-7)%BEAT)/BEAT)*7);
+
+// ---------- colours ----------
+const COL={
+ night:{frame:'linear-gradient(180deg,#3a4560,#1a2032 50%,#2c3550)',back:'linear-gradient(150deg,#26304a,#141a2a 60%,#222b42)',plate:'linear-gradient(150deg,#2f3a57,#1a2134)',edge:'linear-gradient(90deg,#4a5778,#1c2336,#4a5778)',bez:'#05060a'},
+ star:{frame:'linear-gradient(180deg,#f4f2ec,#cfcac0 50%,#ece8df)',back:'linear-gradient(150deg,#f3f0ea,#d9d4ca 60%,#efebe3)',plate:'linear-gradient(150deg,#e9e5dc,#cdc7bb)',edge:'linear-gradient(90deg,#fffdf7,#bdb7ab,#fffdf7)',bez:'#07070a'},
+};
+// ---------- screen content ----------
+function wallHTML(kind){
+  if(kind==='night'){let s='';for(let i=0;i<40;i++){s+=`<div class="star" style="left:${(i*97)%642}px;top:${(i*53)%482}px;opacity:${.3+(i%5)*.15}"></div>`}
+    return `<div class="wall" style="background:radial-gradient(500px 400px at 30% 80%,#ff4fa3 0%,transparent 60%),radial-gradient(500px 420px at 80% 20%,#6a3cff 0%,transparent 60%),radial-gradient(600px 500px at 55% 60%,#1e7bff 0%,transparent 65%),#060a1f">${s}
+     <div class="blob wb1" style="left:200px;top:120px;width:260px;height:260px;background:#9b5cff;opacity:.55"></div></div>`;}
+  return `<div class="wall" style="background:radial-gradient(500px 400px at 25% 25%,#ffd1a6 0%,transparent 60%),radial-gradient(520px 420px at 80% 75%,#a9c7ff 0%,transparent 60%),radial-gradient(500px 400px at 60% 40%,#ffe9f1 0%,transparent 60%),#f6f1ea">
+     <div class="blob wb1" style="left:220px;top:140px;width:240px;height:240px;background:#ffb38a;opacity:.6"></div></div>`;
+}
+function innerHTML(kind){
+  return `<div class="scr">${wallHTML(kind)}
+   <div class="sb" style="left:30px;color:${kind==='star'?'#222':'#fff'}">9:41</div>
+   <div class="split">
+     <div class="pane" style="left:6px;width:310px;background:#1b2230">
+       <svg width="310" height="482" style="position:absolute;left:0;top:0">
+        <path d="M-10 120 L330 60 M-10 300 L330 220 M60 -10 L120 500 M220 -10 L260 500 M-10 420 L330 380" stroke="#2c3546" stroke-width="16" fill="none"/>
+        <path d="M-10 120 L330 60 M-10 300 L330 220 M60 -10 L120 500 M220 -10 L260 500" stroke="#3a4458" stroke-width="2" fill="none"/>
+        <rect x="140" y="130" width="60" height="50" rx="8" fill="#24402c"/><rect x="20" y="330" width="80" height="40" rx="8" fill="#24402c"/>
+        <path class="route" pathLength="1" d="M75 440 L95 300 L170 286 L232 270 L218 140" stroke="#2f8cff" stroke-width="9" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1" stroke-dashoffset="1"/>
+       </svg>
+       <div class="abs pin" style="left:204px;top:112px;width:30px;height:30px;border-radius:50%;background:#ff3b30;border:4px solid #fff;box-shadow:0 0 0 0 rgba(255,59,48,.5)"></div>
+       <div class="abs" style="left:12px;right:12px;bottom:12px;height:84px;border-radius:18px;background:rgba(30,30,34,.92);padding:14px 16px">
+        <div style="font:700 18px Inter;color:#fff">Golden Temple</div><div style="font:500 14px Inter;color:#9a9aa0;margin-top:4px">Amritsar · <span style="color:#30d158">12 min</span></div></div>
+     </div>
+     <div class="pane" style="left:326px;width:310px;background:#0d0d0f">
+       <div class="abs" style="left:0;right:0;top:0;height:64px;background:#1c1c1e;text-align:center;padding-top:14px;font:700 17px Inter;color:#fff">Veer</div>
+       <div class="bub b0" style="left:12px;top:86px;background:#2c2c2e;color:#fff">Phone kiven da? 👀</div>
+       <div class="bub b1" style="right:12px;top:146px;background:#0a84ff;color:#fff">Ikdam kaint! 🔥</div>
+       <div class="bub b2" style="left:12px;top:206px;background:#2c2c2e;color:#fff">Duo lai lea?</div>
+       <div class="bub b3" style="right:12px;top:266px;background:#0a84ff;color:#fff">Haan ji 😎 dekh</div>
+       <div class="bub b4" style="right:12px;top:326px;background:#0a84ff;color:#fff;padding:6px"><div style="width:150px;height:96px;border-radius:14px;background:linear-gradient(160deg,#ffb347,#ff5f6d)"></div></div>
+     </div>
+     <div class="abs" style="left:318px;top:216px;width:8px;height:50px;border-radius:4px;background:#8e8e93"></div>
+   </div>
+   <div class="crease"></div><div class="sheen"></div></div>`;
+}
+function outerHTML(kind){
+  const dark=kind!=='star';
+  return `<div class="scr" style="left:0;width:312px">
+   <div class="wall" style="background:${dark?'radial-gradient(300px 300px at 30% 85%,#ff4fa3,transparent 60%),radial-gradient(320px 300px at 80% 15%,#6a3cff,transparent 60%),#070b22':'radial-gradient(300px 300px at 25% 20%,#ffd1a6,transparent 60%),radial-gradient(320px 300px at 85% 85%,#a9c7ff,transparent 60%),#f6f1ea'}"></div>
+   <div class="abs" style="left:0;width:312px;top:60px;text-align:center;font:600 20px Inter;color:${dark?'#e5e5ea':'#333'}">Friday 23 October</div>
+   <div class="abs" style="left:0;width:312px;top:84px;text-align:center;font:700 108px Inter;letter-spacing:-4px;color:${dark?'#fff':'#1d1d1f'}">9:41</div>
+   <div class="abs" style="left:96px;top:410px;width:120px;height:5px;border-radius:3px;background:${dark?'#fff':'#1d1d1f'};opacity:.7"></div>
+   <div class="sheen"></div></div>`;
+}
+// ---------- rig ----------
+function makeRig(kind,id){
+  const c=COL[kind];
+  const r=document.createElement('div');r.className='rig';r.id=id;
+  r.innerHTML=`
+  <div class="half L">
+    <div class="face front" style="background:${c.frame}"><div class="bez"><div class="in" style="background:${c.bez}">${innerHTML(kind)}</div></div></div>
+    <div class="face back" style="background:${c.back}">
+      <div class="plate" style="background:${c.plate};box-shadow:0 2px 0 rgba(255,255,255,.25) inset,0 8px 20px rgba(0,0,0,.35)">
+        <div class="lens" style="left:12px;top:12px"></div><div class="lens" style="left:12px;top:78px"></div>
+        <div class="abs" style="left:96px;top:30px;width:26px;height:26px;border-radius:50%;background:radial-gradient(#fff8e0,#d8c99a)"></div>
+        <div class="abs" style="left:104px;top:100px;width:10px;height:10px;border-radius:50%;background:#0a0a0a"></div></div>
+      <div class="sheen"></div></div>
+    <div class="edge" style="background:${c.edge}"></div>
+  </div>
+  <div class="half R">
+    <div class="face front" style="background:${c.frame}"><div class="bez"><div class="in" style="background:${c.bez}">${innerHTML(kind)}</div></div></div>
+    <div class="face back" style="background:${c.frame}"><div class="bez"><div class="in" style="background:${c.bez}">${outerHTML(kind)}</div></div></div>
+    <div class="edge" style="background:${c.edge}"><div class="abs tid" style="left:2px;top:150px;width:8px;height:70px;border-radius:4px;background:rgba(255,255,255,.35)"></div></div>
+  </div>`;
+  $('stage3d').appendChild(r);return r;
+}
+const rigA=makeRig('night','rigA'), rigB=makeRig('star','rigB'), rigC=makeRig('night','rigC');
+
+function setRig(r,{ry=0,rx=0,rz=0,s=1,x=0,y=0,open=1,o=1}){
+  const shift=(1-open)*165; // keep visible body centred while folding
+  r.style.opacity=o; r.style.display=o<=0.001?'none':'block';
+  r.style.transform=`translate(${x}px,${y}px) scale(${s}) rotateX(${rx}deg) rotateY(${ry}deg) rotateZ(${rz}deg) translateX(${shift}px)`;
+  r.querySelector('.half.R').style.transform=`rotateY(${-180*(1-open)}deg)`;
+}
+function rigScreen(r,t,{split=0,route=0,bubbles=0,crease=1,sheenX=-300,wb=0}){
+  r.querySelectorAll('.split').forEach(e=>e.style.opacity=split);
+  r.querySelectorAll('.route').forEach(e=>e.style.strokeDashoffset=1-route);
+  r.querySelectorAll('.pin').forEach(e=>{const p=(t*1.4)%1;e.style.boxShadow=`0 0 0 ${p*26}px rgba(255,59,48,${.5*(1-p)})`;});
+  r.querySelectorAll('.bub').forEach((e,j)=>{const i=j%5;const x=eb(clamp(bubbles-i));e.style.opacity=clamp(bubbles-i);e.style.transform=`scale(${.6+.4*x})`;});
+  r.querySelectorAll('.crease').forEach(e=>e.style.opacity=crease);
+  r.querySelectorAll('.sheen').forEach(e=>e.style.left=sheenX+'px');
+  r.querySelectorAll('.wb1').forEach(e=>e.style.transform=`translate(${Math.sin(t*.8+wb)*60}px,${Math.cos(t*.6)*40}px)`);
+}
+
+// ---------- keyframes for hero rig A ----------
+// [t, ry, rx, rz, s, x, y, open]
+const KA=[
+ [0.0, 90, 0, 0, 1.55, 0, 40, 1],
+ [2.5, 86, 2, 0, 1.6, 0, 40, 1],
+ [3.3, 28,-10, 4, 1.25, 0, 40, 0],
+ [5.9,-22, 8,-3, 1.3, 0, 40, 0],
+ [6.45, 0, 0, 0, 1.25, 0, 40, 0],
+ [7.0, 0, 0, 0, 1.45, 0, 40, 1],
+ [9.9, 0, 0, 0, 1.52, 0, 40, 1],
+ [10.4,-10, 4, 0, 1.48, 0, 40, 1],
+ [13.9, 10, -3, 0, 1.48, 0, 40, 1],
+];
+function interp(K,t){
+  if(t<=K[0][0])return K[0].slice(1);
+  for(let i=0;i<K.length-1;i++){const a=K[i],b=K[i+1];if(t<=b[0]){let x=(t-a[0])/(b[0]-a[0]);
+    x=(i===4)?eb(x):eio(x); // unfold overshoot
+    return a.slice(1).map((v,j)=>j===6&&i===4?lerp(v,b[j+1],clamp(x,0,1.08)):lerp(v,b[j+1],x));}}
+  return K[K.length-1].slice(1);
+}
+
+// ---------- 2D layers ----------
+const TXT=$('L_text');
+function T(id,html,top,cls='h2',extra=''){const d=document.createElement('div');d.className='t '+cls;d.id=id;d.style.top=top+'px';d.style.cssText+=extra;d.innerHTML=html;TXT.appendChild(d);return d;}
+T('t_thin','<span class="grad">The thinnest iPhone ever.</span>',260,'h2');
+T('t_mm','5.2<span style="font-size:70px;letter-spacing:-2px"> mm</span>',1420,'h1','font-size:150px;');
+T('t_pocket','Closed. <span style="color:#a1a1a6">Pocket size.</span>',240,'h2');
+T('t_pocket2','5.4″ outer display',1400,'h3');
+T('t_name','<span class="grad">iPhone Duo</span>',190,'h1','font-size:150px;');
+T('t_76','Opens to <b style="color:#fff">7.6″</b>. Crease? <span class="grad">Virtually invisible.</span>',1440,'h3','font-size:40px;');
+T('t_two','Two apps.<br><span class="grad">One screen.</span>',200,'h1','white-space:normal;font-size:118px');
+T('t_two2','Split View · iOS 27',1440,'h3');
+T('t_cam','<span class="gold">Dual 48MP</span> Fusion',210,'h2');
+T('t_cam2','Main · Ultra Wide · 4K 120 fps',330,'h3');
+T('t_col','Two finishes.',230,'h2');
+T('t_colA','Star White',1430,'h3','width:540px;left:0;');
+T('t_colB','Night Sky',1430,'h3','width:540px;left:540px;');
+T('t_endA','<span class="grad">iPhone Duo</span>',230,'h1','font-size:150px;');
+T('t_endB','From A$3,499',1390,'h2','font-size:64px;');
+T('t_endC','Pre-order 16 Oct · Available 23 Oct',1490,'h3','font-size:38px;');
+T('t_endD','Concept ad · fan made · not affiliated with Apple',1800,'h3','font-size:22px;color:#6e6e73;letter-spacing:0');
+
+// chip layer
+$('L_chip').innerHTML=`<svg class="abs" width="1080" height="1920" id="traces">${[...Array(16)].map((_,i)=>{const a=i/16*Math.PI*2,r1=230,r2=360+(i%3)*50;const x1=540+Math.cos(a)*r1,y1=900+Math.sin(a)*r1,xm=540+Math.cos(a)*(r1+120),ym=900+Math.sin(a)*(r1+120)+(i%2?40:-40),x2=540+Math.cos(a)*r2,y2=900+Math.sin(a)*r2;
+ return `<path class="tr" pathLength="1" d="M${x1} ${y1} L${xm} ${ym} L${x2} ${y2}" stroke="#4d7cff" stroke-width="4" fill="none" stroke-dasharray="1" stroke-dashoffset="1"/><circle class="trd" cx="${x2}" cy="${y2}" r="9" fill="#9bb6ff" opacity="0"/>`}).join('')}</svg>
+ <div class="abs" id="chipbox" style="left:340px;top:700px;width:400px;height:400px;border-radius:64px;padding:6px;background:conic-gradient(from 0deg,#4d7cff,#b26bff,#ff6bd5,#ffb36b,#4d7cff)">
+   <div style="width:100%;height:100%;border-radius:58px;background:radial-gradient(circle at 50% 30%,#22242c,#0b0c10);display:flex;flex-direction:column;align-items:center;justify-content:center">
+     <div style="font:700 44px Inter;color:#a1a1a6;letter-spacing:-1px">A20</div><div style="font:800 128px Inter;letter-spacing:-6px;line-height:1" class="grad">Pro</div></div></div>
+ <div class="t h2" id="chipT1" style="top:200px"><span class="grad">A20 Pro</span> · 2 nm</div>
+ <div class="t" id="chipT2" style="top:1390px;font:700 150px Inter;letter-spacing:-6px">+<span id="chipN">0</span>%</div>
+ <div class="t h3" id="chipT3" style="top:1570px">sustained performance with vapor chamber</div>
+ ${[...Array(5)].map((_,i)=>`<svg class="abs vap" width="1080" height="80" style="left:0;top:${1150+i*0}px"><path d="M0 40 ${[...Array(28)].map((_,k)=>`Q ${k*40+20} ${k%2?10:70} ${k*40+40} 40`).join(' ')}" stroke="rgba(100,200,255,.5)" stroke-width="3" fill="none"/></svg>`).join('')}`;
+
+// hinge + touch id layer
+$('L_hinge').innerHTML=`<div class="t h2" id="hgT1" style="top:230px">Grade 5 <span class="grad">titanium</span>.</div>
+ <div class="t h3" id="hgT2" style="top:345px">A hinge with 100+ parts.</div>
+ <div class="abs" id="hinge" style="left:240px;top:520px;width:600px;height:520px"></div>
+ <div class="abs" id="fp" style="left:390px;top:1150px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,#1a2340,#090b12 70%);display:flex;align-items:center;justify-content:center">
+  <svg width="200" height="200" viewBox="0 0 24 24" fill="none" stroke="#4d9bff" stroke-width=".9" stroke-linecap="round" id="fpsvg">
+   <path pathLength="1" d="M12 3a8 8 0 0 0-8 8v3"/><path pathLength="1" d="M20 11a8 8 0 0 0-3-6.2"/><path pathLength="1" d="M7 18c1-1.5 1.5-3.5 1.5-6a3.5 3.5 0 0 1 7 0c0 2.5-.5 5-1.5 7"/>
+   <path pathLength="1" d="M12 12c0 3-.6 5.5-2 8"/><path pathLength="1" d="M19 14c0 2.5-.6 4.6-1.6 6.4"/><path pathLength="1" d="M5.5 16.5c.4-1 .5-2.5.5-4.5a6 6 0 0 1 9.5-4.9"/></svg></div>
+ <div class="t h3" id="fpT" style="top:1500px">Touch ID in the side button.</div>`;
+{let h='';const parts=[];for(let i=0;i<22;i++){const row=Math.floor(i/2),side=i%2;parts.push([side?310:150,20+row*44,side?140:140,30,i]);}
+ // spine
+ h+=`<div class="abs hp" data-dx="0" data-dy="0" style="left:280px;top:0;width:40px;height:500px;border-radius:20px;background:linear-gradient(90deg,#8a8f99,#e3e6ec,#8a8f99)"></div>`;
+ parts.forEach(([x,y,w,hh,i])=>{const dx=(i%2?1:-1)*(80+(i*37)%160),dy=((i*53)%120)-60;
+  h+=`<div class="abs hp" data-dx="${dx}" data-dy="${dy}" data-r="${(i*29)%90-45}" style="left:${x}px;top:${y}px;width:${w}px;height:${hh}px;border-radius:8px;background:linear-gradient(180deg,#d9dde4,#9aa0aa);box-shadow:0 4px 10px rgba(0,0,0,.4)"><div style="position:absolute;left:${i%2?10:110}px;top:7px;width:16px;height:16px;border-radius:50%;background:#5d636e"></div></div>`;});
+ $('hinge').innerHTML=h;}
+
+// stats layer
+$('L_stats').innerHTML=`
+ <div class="abs st" id="st0" style="left:0;top:0;width:1080px;height:1920px">
+   <div class="t" style="top:640px;font:800 300px Inter;letter-spacing:-14px"><span class="gold" id="n24">0</span></div>
+   <div class="t h2" style="top:980px">hours of battery</div>
+   <div class="abs" style="left:290px;top:1150px;width:500px;height:150px;border-radius:36px;border:8px solid #f5f5f7;padding:12px"><div id="batt" style="height:100%;border-radius:20px;background:linear-gradient(90deg,#30d158,#a6f28c);width:0"></div></div>
+   <div class="abs" style="left:798px;top:1195px;width:22px;height:60px;border-radius:0 10px 10px 0;background:#f5f5f7"></div></div>
+ <div class="abs st" id="st1" style="left:0;top:0;width:1080px;height:1920px">
+   <div class="abs" id="sun" style="left:240px;top:500px;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,#fff 0,#ffe7a0 25%,rgba(255,170,60,.35) 50%,transparent 70%)"></div>
+   <div class="t" style="top:640px;font:800 260px Inter;letter-spacing:-12px;color:#111"><span id="n3000">0</span></div>
+   <div class="t h2" style="top:1180px;color:#1d1d1f">nits peak brightness</div>
+   <div class="t h3" style="top:1300px;color:#3a3a3c">ProMotion · Always-On</div></div>
+ <div class="abs st" id="st2" style="left:0;top:0;width:1080px;height:1920px">
+   <div class="t" style="top:640px;font:800 300px Inter;letter-spacing:-14px"><span class="grad" id="n254">0</span><span style="font-size:120px;color:#a1a1a6"> g</span></div>
+   <div class="t h2" style="top:980px">Light in your hand.</div>
+   <div class="t h3" style="top:1100px">11.3 mm closed · 5.2 mm open</div></div>`;
+
+// camera overlays
+$('L_cam').innerHTML=`<div class="abs" id="vf" style="left:90px;top:520px;width:900px;height:900px">
+  ${[[0,0],[1,0],[0,1],[1,1]].map(([a,b])=>`<div class="abs" style="${a?'right':'left'}:0;${b?'bottom':'top'}:0;width:90px;height:90px;border-${a?'right':'left'}:6px solid #ffd60a;border-${b?'bottom':'top'}:6px solid #ffd60a"></div>`).join('')}
+  <div class="abs" style="left:24px;top:24px;font:700 30px Inter;color:#ff453a" id="recT">● REC 4K · 120</div></div>
+ <div class="abs" id="ph1" style="left:120px;top:1450px;width:400px;height:300px;border-radius:24px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.6)">
+   <div style="position:absolute;inset:0;background:linear-gradient(#ff9a3c,#ffd27a 45%,#f7c25b 46%,#c78b2b)"></div>
+   <div style="position:absolute;left:150px;top:60px;width:90px;height:90px;border-radius:50%;background:#fff3c4;box-shadow:0 0 60px #fff3c4"></div>
+   <div style="position:absolute;left:0;right:0;top:140px;bottom:0;background:repeating-linear-gradient(100deg,rgba(120,70,10,.35) 0 6px,transparent 6px 14px)"></div>
+   <div style="position:absolute;left:14px;bottom:12px;font:600 18px Inter;color:#fff">Shot on Duo · Ultra Wide</div></div>
+ <div class="abs" id="ph2" style="left:560px;top:1450px;width:400px;height:300px;border-radius:24px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.6)">
+   <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 55%,#ff5fa2 0 18%,#ffb3d1 19% 30%,#2a7a3c 31% 60%,#0d2b16 61%)"></div>
+   <div style="position:absolute;left:180px;top:150px;width:40px;height:40px;border-radius:50%;background:#ffe14d"></div>
+   <div style="position:absolute;left:14px;bottom:12px;font:600 18px Inter;color:#fff">Shot on Duo · Macro</div></div>`;
+
+// ---------- render ----------
+function show(id,t,a,b,din=.45,dout=.3,dy=60){const e=$(id);const i=ex(P(t,a,a+din)),o=eio(P(t,b-dout,b));const v=t>=a&&t<b;e.style.display=v?'block':'none';if(v){e.style.opacity=i*(1-o);e.style.transform=`translateY(${(1-i)*dy-o*30}px)`;}}
+function render(t){
+  const pu=pulse(t);
+  // background glow per scene
+  const g=t<7?'radial-gradient(900px 900px at 50% 46%,rgba(80,110,255,.18),transparent 70%)':
+          t<14?`radial-gradient(1000px 1000px at 50% 46%,rgba(120,80,255,${.32+pu*.1}),transparent 70%)`:
+          t<17.5?'radial-gradient(900px 900px at 50% 47%,rgba(77,124,255,.35),transparent 70%)':
+          t<21?'radial-gradient(900px 900px at 50% 40%,rgba(255,180,80,.18),transparent 70%)':
+          t<24?'radial-gradient(900px 900px at 50% 45%,rgba(77,155,255,.22),transparent 70%)':
+          t<27?(t>=25&&t<26?'radial-gradient(1200px 1200px at 50% 45%,#ffe9a8,#ffb44a 60%,#ff7a1a)':'radial-gradient(900px 900px at 50% 45%,rgba(48,209,88,.16),transparent 70%)'):
+          t<30.5?'radial-gradient(1000px 900px at 50% 50%,rgba(200,210,255,.18),transparent 70%)':
+          `radial-gradient(1000px 1000px at 50% 46%,rgba(120,80,255,${.35+pu*.08}),transparent 70%)`;
+  $('bgGlow').style.background=g;
+
+  // ---- hero rig A (0–14, 30.5–end) ----
+  if(t<14.2){
+    let [ry,rx,rz,s,x,y,open]=interp(KA,t);
+    const fade=1-P(t,13.9,14.2);
+    setRig(rigA,{ry,rx,rz,s:s*(1+pu*.012),x,y,open:clamp(open,0,1.08),o:fade});
+    // overshoot of open beyond 1 handled by clamp above (slight)
+    const split=eio(P(t,10.2,10.6));
+    rigScreen(rigA,t,{split,route:eio(P(t,10.7,12.2)),bubbles:(t-10.9)/0.5,crease:t<7.6?1:1-eio(P(t,7.6,8.6))*.92,sheenX:lerp(-300,800,P(t,7.6,8.8))});
+  } else if(t>=30.5){
+    const a=eo(P(t,30.5,31.3));
+    setRig(rigA,{ry:lerp(-25,0,a)+Math.sin(t*.8)*3,rx:lerp(10,0,a),s:lerp(1.0,1.38,a),y:40,open:1,o:a});
+    rigScreen(rigA,t,{split:0,crease:.08,sheenX:lerp(-300,800,P(t,31.5,32.6))});
+  } else if(t>=17.5&&t<21.1){
+    // camera close-up: show back of closed phone
+    const a=eio(P(t,17.5,18.1)),o=1-P(t,20.8,21.1);
+    setRig(rigA,{ry:180+lerp(30,-8,P(t,17.5,21)),rx:lerp(-12,6,P(t,17.5,21)),rz:-6,s:lerp(1.6,2.35,a),x:lerp(0,110,a),y:lerp(40,420,a),open:0,o:o});
+    rigScreen(rigA,t,{sheenX:lerp(-300,700,P(t,18.6,19.8))});
+  } else setRig(rigA,{o:0});
+
+  // ---- colours rigs B (star) + C (night) ----
+  if(t>=27&&t<30.6){
+    const a=eb(P(t,27.05,27.7)),b=eb(P(t,27.2,27.85)),o=1-P(t,30.25,30.55);
+    const op=lerp(0,.4,eio(P(t,27.6,28.6)));
+    setRig(rigB,{ry:35+Math.sin(t*1.2)*12,rx:-8,s:.78*a,x:-250,y:80,open:op,o:clamp(a)*o});
+    setRig(rigC,{ry:-35-Math.sin(t*1.2)*12,rx:-8,s:.78*b,x:250,y:80,open:op,o:clamp(b)*o});
+    rigScreen(rigB,t,{crease:.1});rigScreen(rigC,t,{crease:.1,wb:2});
+  } else {setRig(rigB,{o:0});setRig(rigC,{o:0});}
+
+  // ---- text ----
+  show('t_thin',t,0.5,2.9); show('t_mm',t,1.0,2.9,.5,.3,40);
+  $('t_mm').querySelectorAll?0:0;
+  show('t_pocket',t,3.4,6.5); show('t_pocket2',t,3.7,6.5);
+  show('t_name',t,7.05,10.1,.6,.3,-60); show('t_76',t,7.5,10.1);
+  show('t_two',t,10.2,13.9); show('t_two2',t,10.5,13.9);
+  show('t_cam',t,17.6,21.0); show('t_cam2',t,17.85,21.0);
+  show('t_col',t,27.1,30.4); show('t_colA',t,27.6,30.4); show('t_colB',t,27.75,30.4);
+  show('t_endA',t,30.9,40,.7,.3,-60); show('t_endB',t,31.6,40); show('t_endC',t,31.9,40); show('t_endD',t,32.3,40);
+  // 5.2 mm measurement brackets drawn via text glow
+  $('t_mm').style.textShadow=`0 0 ${30+pu*20}px rgba(120,150,255,.5)`;
+
+  // ---- chip scene 14–17.5 ----
+  const chipOn=t>=14&&t<17.6; $('L_chip').style.display=chipOn?'block':'none';
+  if(chipOn){const a=eb(P(t,14.0,14.6)),o=P(t,17.25,17.55);
+    $('chipbox').style.transform=`scale(${a*(1+pu*.03)*(1-o*.3)}) rotate(${(1-eo(P(t,14,14.8)))*-90}deg)`;$('chipbox').style.opacity=1-o;
+    $('chipbox').firstElementChild.style.boxShadow=`0 0 ${80+pu*60}px rgba(120,140,255,.6)`;
+    $('chipbox').style.background=`conic-gradient(from ${t*120}deg,#4d7cff,#b26bff,#ff6bd5,#ffb36b,#4d7cff)`;
+    document.querySelectorAll('#traces .tr').forEach((p,i)=>{const s=14.4+(i%8)*.06;p.style.strokeDashoffset=1-eio(P(t,s,s+.5));p.style.opacity=1-o;});
+    document.querySelectorAll('#traces .trd').forEach((c,i)=>{const s=14.9+(i%8)*.06;c.setAttribute('opacity',clamp((t-s)*4)*(1-o));});
+    ['chipT1','chipT2','chipT3'].forEach((id,i)=>{const x=ex(P(t,14.3+i*.2,14.8+i*.2));$(id).style.opacity=x*(1-o);$(id).style.transform=`translateY(${(1-x)*50}px)`;});
+    $('chipN').textContent=Math.round(35*eo(P(t,14.9,16.0)));
+    document.querySelectorAll('.vap').forEach((v,i)=>{v.style.transform=`translate(${-((t*120+i*80)%80)}px,${(i-2)*26}px)`;v.style.opacity=(.6-Math.abs(i-2)*.12)*(1-o)*P(t,15,15.5);});
+  }
+
+  // ---- camera overlays 17.5–21 ----
+  const camOn=t>=17.6&&t<21.1; $('L_cam').style.display=camOn?'block':'none';
+  if(camOn){const o=1-P(t,20.8,21.1);
+    const v=eo(P(t,18.0,18.4));$('vf').style.opacity=v*o;$('vf').style.transform=`scale(${1.15-.15*v})`;
+    $('recT').style.opacity=Math.floor(t*3)%2?1:.3;
+    [['ph1',19.3,-1],['ph2',19.55,1]].forEach(([id,s,d])=>{const x=eb(P(t,s,s+.5));$(id).style.opacity=clamp(x*2)*o;$(id).style.transform=`translateY(${(1-x)*300}px) rotate(${d*(1-x)*12+d*3}deg)`;});
+  }
+
+  // ---- hinge + touch id 21–24 ----
+  const hgOn=t>=21&&t<24.05; $('L_hinge').style.display=hgOn?'block':'none';
+  if(hgOn){const o=P(t,23.75,24.05);
+    show('hgT1',t,21.1,24.05); show('hgT2',t,21.3,24.05);
+    const ex1=eio(P(t,21.2,21.9)),join=eio(P(t,22.3,22.9)),amt=ex1*(1-join);
+    $('hinge').style.opacity=clamp(P(t,21.0,21.3))*(1-o);$('hinge').style.transform=`scale(${.9+.1*eo(P(t,21,21.5))}) rotateZ(${lerp(-8,0,P(t,21,23))}deg)`;
+    document.querySelectorAll('#hinge .hp').forEach(p=>{const dx=+p.dataset.dx,dy=+p.dataset.dy,r=+(p.dataset.r||0);p.style.transform=`translate(${dx*amt}px,${dy*amt}px) rotate(${r*amt}deg)`;});
+    const f=eo(P(t,22.6,23.0));$('fp').style.opacity=f*(1-o);$('fp').style.transform=`scale(${.7+.3*f})`;
+    const scan=P(t,22.8,23.4);document.querySelectorAll('#fpsvg path').forEach((p,i)=>{p.style.strokeDasharray='1';p.style.strokeDashoffset=1-eio(clamp(scan*1.6-i*.12));});
+    $('fp').style.boxShadow=t>23.4?`0 0 ${60*Math.exp(-(t-23.4)*4)+20}px rgba(77,155,255,.7)`:'none';
+    show('fpT',t,22.9,24.05);
+  }
+
+  // ---- stats 24–27 ----
+  const stOn=t>=24&&t<27.05; $('L_stats').style.display=stOn?'block':'none';
+  if(stOn){[[0,24,25],[1,25,26],[2,26,27.05]].forEach(([i,a,b])=>{const e=$('st'+i);const v=t>=a&&t<b;e.style.display=v?'block':'none';if(!v)return;
+      const x=ex(P(t,a,a+.3));e.style.opacity=x*(1-P(t,b-.12,b));e.style.transform=`scale(${1.25-.25*x})`;});
+    $('n24').textContent=Math.round(24*eo(P(t,24.05,24.6)));$('batt').style.width=(100*eo(P(t,24.1,24.8)))+'%';
+    $('n3000').textContent=Math.round(3000*eo(P(t,25.05,25.6))).toLocaleString('en-US');$('sun').style.transform=`scale(${1+pu*.15+P(t,25,26)*.3})`;
+    $('n254').textContent=Math.round(254*eo(P(t,26.05,26.6)));}
+
+  // flash on big cuts
+  const cuts=[7.0,14.0,24.0,25.0,26.0,30.5];
+  $('flash').style.opacity=cuts.reduce((m,c)=>Math.max(m,t>=c?Math.exp(-(t-c)*10)*(c===7?.75:.3):0),0);
+  // final fade
+  $('S').style.opacity=1-P(t,34.1,34.5);
+}
+window.render=render;
+document.fonts.ready.then(()=>{render(0);window.READY=true;});
+if(location.search.includes('play')){const st=performance.now();(function loop(){const t=((performance.now()-st)/1000)%34.5;if(window.READY)render(t);requestAnimationFrame(loop)})();}
+</script>
+</body>
+</html>

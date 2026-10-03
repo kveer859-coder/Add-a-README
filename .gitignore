@@ -5,3 +5,7 @@ spotify-ad/bts_render.log
 spotify-ad/bts_sfx.json
 node_modules/
 spotify-ad/bts_part.mp4
+duo-ad/*_noaudio.mp4
+duo-ad/*.wav
+duo-ad/render.log
+spotify-ad/bts_sfx.json
