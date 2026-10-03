@@ -1,0 +1,538 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Spotify 30s Ad</title>
+<style>
+@font-face{font-family:"Mont";src:url("montserrat.woff2") format("woff2");font-weight:100 900;}
+:root{--g:#1ED760;--bg:#121212;--card:#181818;--sub:#b3b3b3;}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;background:#000;overflow:hidden}
+body{font-family:"Mont",sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
+#stage{position:absolute;inset:0;overflow:hidden;background:#000}
+.abs{position:absolute}
+.scene{position:absolute;inset:0;display:none;overflow:hidden}
+.mask{overflow:hidden;display:block}
+.mask>span{display:block;will-change:transform}
+svg{display:block}
+.ic{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- S1 intro ---------- */
+#s1{background:#000}
+#eq{left:0;top:0;width:1920px;height:1080px}
+.bar{position:absolute;width:18px;border-radius:9px;background:var(--g);bottom:540px}
+#logo1{left:840px;top:350px;width:240px;height:240px}
+#wm1wrap{top:368px;height:210px;overflow:hidden}
+#wm1{font-size:178px;font-weight:800;letter-spacing:-6px;line-height:210px;white-space:nowrap}
+#tag1{left:0;width:1920px;top:690px;text-align:center;font-size:46px;font-weight:600;color:var(--sub)}
+#tag1 span{display:inline-block}
+#burst{width:100px;height:100px;border-radius:50%;background:var(--g);left:0;top:0}
+
+/* ---------- S2 stats ---------- */
+#s2{background:var(--g);color:#000}
+.mq{left:0;white-space:nowrap;font-size:150px;font-weight:900;color:transparent;-webkit-text-stroke:2px rgba(0,0,0,.14);letter-spacing:-3px}
+.grp{left:0;width:1920px;text-align:center}
+.big{font-size:330px;font-weight:900;letter-spacing:-16px;line-height:330px}
+.lbl{font-size:120px;font-weight:800;letter-spacing:-4px;line-height:140px}
+.l3{font-size:160px;font-weight:900;letter-spacing:-7px;line-height:185px}
+.pill{background:#000;color:var(--g);border-radius:120px;padding:0 50px 6px}
+#s2logo{left:60px;top:50px;width:70px;height:70px}
+#wipe2{left:-200px;width:2320px;height:1400px;top:0;background:#0a0a0a}
+
+/* ---------- S3 app ---------- */
+#s3{background:#0a0a0a}
+#glow{left:120px;top:40px;width:1000px;height:1000px;border-radius:50%;filter:blur(120px);opacity:.55}
+#glow2{left:1300px;top:600px;width:700px;height:700px;border-radius:50%;filter:blur(140px);opacity:.25;background:var(--g)}
+#phone{left:420px;top:125px;width:400px;height:830px;border-radius:60px;background:#1b1b1b;padding:14px;
+  box-shadow:0 0 0 2px #3a3a3a inset,0 40px 120px rgba(0,0,0,.7),0 0 0 1px #000}
+#screen{position:relative;width:372px;height:802px;border-radius:46px;overflow:hidden;background:var(--bg)}
+#island{left:131px;top:12px;width:110px;height:32px;border-radius:16px;background:#000;z-index:50}
+.scr{position:absolute;inset:0;background:var(--bg);overflow:hidden}
+.sb{left:0;top:0;width:372px;height:48px;font-size:15px;font-weight:700}
+.sb .t{position:absolute;left:34px;top:16px}
+.sb .r{position:absolute;right:30px;top:18px;display:flex;gap:6px;align-items:center}
+.chip{position:absolute;top:58px;height:32px;border-radius:16px;padding:0 16px;font-size:13px;font-weight:600;line-height:32px;background:#2a2a2a}
+.tile{position:absolute;width:166px;height:54px;border-radius:6px;background:#2a2a2a;overflow:hidden}
+.tile .a{position:absolute;left:0;top:0;width:54px;height:54px}
+.tile .n{position:absolute;left:64px;top:0;height:54px;display:flex;align-items:center;font-size:12.5px;font-weight:700;line-height:15px;padding-right:6px}
+.h{position:absolute;left:16px;font-size:20px;font-weight:800;letter-spacing:-.4px}
+.card{position:absolute;width:106px}
+.card .a{width:106px;height:106px;border-radius:6px;overflow:hidden;position:relative}
+.card .n{font-size:12px;font-weight:700;margin-top:8px}
+.card .s{font-size:10.5px;color:var(--sub);margin-top:2px;line-height:13px}
+.art{position:absolute;inset:0}
+.art .tx{position:absolute;left:8px;bottom:7px;font-size:12px;font-weight:800;line-height:13px}
+.nav{position:absolute;left:0;bottom:0;width:372px;height:70px;background:linear-gradient(to top,#000 40%,rgba(0,0,0,.0));display:flex;justify-content:space-around;padding-top:16px}
+.nav div{display:flex;flex-direction:column;align-items:center;font-size:10px;color:var(--sub);gap:4px;font-weight:600}
+.nav div.on{color:#fff}
+.mini{position:absolute;left:8px;top:670px;width:356px;height:56px;border-radius:8px;background:#4a1a6b;overflow:hidden}
+.ripple{position:absolute;width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,.55);z-index:40;opacity:0}
+
+#np{background:linear-gradient(180deg,#6d22b5 0%,#3b1366 45%,#121212 100%)}
+#npart{left:24px;top:104px;width:324px;height:324px;border-radius:8px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.prog{left:24px;top:528px;width:324px;height:4px;border-radius:2px;background:rgba(255,255,255,.25)}
+.lyr{left:16px;top:690px;width:340px;height:200px;border-radius:14px;background:#a2389e;padding:16px 18px}
+.lyr .l{font-size:16px;font-weight:800;line-height:21px;color:rgba(0,0,0,.55);margin-top:6px}
+
+.btile{position:absolute;width:166px;height:100px;border-radius:8px;overflow:hidden}
+.btile b{position:absolute;left:12px;top:10px;font-size:16px;font-weight:800;width:120px;line-height:19px}
+.btile i{position:absolute;right:-16px;bottom:-8px;width:68px;height:68px;transform:rotate(25deg);box-shadow:0 4px 12px rgba(0,0,0,.4);border-radius:3px}
+
+.co{left:1010px;width:820px}
+.co .k{font-size:24px;font-weight:700;letter-spacing:6px;color:var(--g)}
+.co .hd{font-size:104px;font-weight:900;letter-spacing:-4px;line-height:118px;margin-top:14px}
+.co .bd{font-size:32px;font-weight:500;color:var(--sub);line-height:46px;margin-top:22px;width:720px}
+.co .pl{display:flex;gap:14px;margin-top:36px}
+.co .pl div{border:2px solid #3a3a3a;border-radius:40px;padding:12px 26px;font-size:24px;font-weight:600;display:flex;align-items:center;gap:10px}
+.fl{background:rgba(40,40,40,.82);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:14px 20px;display:flex;align-items:center;gap:14px;
+  box-shadow:0 20px 50px rgba(0,0,0,.55);font-size:20px;font-weight:700;white-space:nowrap;backdrop-filter:blur(10px)}
+.fl small{display:block;font-size:15px;font-weight:500;color:var(--sub);margin-top:2px}
+
+/* ---------- S4 features ---------- */
+#s4{background:#0a0a0a}
+#s4grid{inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:80px 80px}
+.fc{width:520px;height:210px;border-radius:24px;background:linear-gradient(145deg,#1e1e1e,#151515);border:1px solid #262626;overflow:hidden}
+.fc .ib{position:absolute;left:36px;top:58px;width:94px;height:94px;border-radius:50%;background:var(--g);color:#000;display:flex;align-items:center;justify-content:center}
+.fc .t{position:absolute;left:160px;top:56px;font-size:38px;font-weight:800;letter-spacing:-1px}
+.fc .d{position:absolute;left:160px;top:108px;font-size:23px;font-weight:500;color:var(--sub);width:330px;line-height:31px}
+.fc .sh{position:absolute;top:-40px;width:120px;height:300px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);transform:rotate(20deg)}
+
+/* ---------- S5 devices ---------- */
+#s5{background:#000}
+#s5glow{left:360px;top:700px;width:1200px;height:700px;border-radius:50%;background:var(--g);filter:blur(160px);opacity:.28}
+.dv{width:220px;text-align:center;color:#fff}
+.dv svg{margin:0 auto}
+.dv div{font-size:24px;font-weight:600;color:var(--sub);margin-top:14px}
+.badge{height:120px;border-radius:20px;background:#000;border:2px solid #8a8a8a;display:flex;align-items:center;padding:0 34px 0 26px;gap:18px;color:#fff}
+.badge .sm{font-size:19px;font-weight:600;letter-spacing:.5px}
+.badge .lg{white-space:nowrap;font-size:44px;font-weight:700;letter-spacing:-1px;line-height:48px}
+
+/* ---------- S6 end ---------- */
+#s6{background:var(--g);color:#000}
+#endlogo{width:220px;height:220px}
+#wm6wrap{height:200px;overflow:hidden}
+#wm6{font-size:170px;font-weight:800;letter-spacing:-6px;line-height:200px;white-space:nowrap}
+#flash{inset:0;background:#fff;opacity:0;pointer-events:none}
+</style>
+</head>
+<body>
+<div id="stage">
+
+<!-- S1 -->
+<div class="scene" id="s1">
+  <div class="abs" id="eq"></div>
+  <svg class="abs" id="logo1" viewBox="0 0 24 24"></svg>
+  <div class="abs" id="wm1wrap"><div id="wm1">Spotify</div></div>
+  <div class="abs" id="tag1"></div>
+  <div class="abs" id="burst"></div>
+</div>
+
+<!-- S2 -->
+<div class="scene" id="s2">
+  <div class="abs mq" id="mq1" style="top:20px">MUSIC • PODCASTS • AUDIOBOOKS • MUSIC • PODCASTS • AUDIOBOOKS • MUSIC • PODCASTS •</div>
+  <div class="abs mq" id="mq2" style="top:880px">PLAYLISTS • ARTISTS • LYRICS • PLAYLISTS • ARTISTS • LYRICS • PLAYLISTS • ARTISTS •</div>
+  <svg class="abs" id="s2logo" viewBox="0 0 24 24"></svg>
+  <div class="abs grp" id="g1" style="top:250px"><div class="mask"><span class="big" id="n1">100M+</span></div><div class="mask"><span class="lbl">songs</span></div></div>
+  <div class="abs grp" id="g2" style="top:250px"><div class="mask"><span class="big" id="n2">6M+</span></div><div class="mask"><span class="lbl">podcast titles</span></div></div>
+  <div class="abs grp" id="g3" style="top:330px"><div class="mask"><span class="l3">+ Audiobooks.</span></div><div class="mask" style="padding-bottom:10px"><span class="l3">All in <span class="pill">one app.</span></span></div></div>
+  <div class="abs" id="wipe2"></div>
+</div>
+
+<!-- S3 -->
+<div class="scene" id="s3">
+  <div class="abs" id="glow"></div>
+  <div class="abs" id="glow2"></div>
+  <div class="abs" id="phone"><div id="screen">
+    <div class="abs" id="island"></div>
+    <div class="scr" id="home"></div>
+    <div class="scr" id="np"></div>
+    <div class="scr" id="srch"></div>
+    <div class="ripple" id="rip"></div>
+  </div></div>
+  <div class="abs fl" id="flA"></div>
+  <div class="abs fl" id="flB"></div>
+  <div class="abs fl" id="flC"></div>
+  <div class="abs fl" id="flD"></div>
+  <div class="abs co" id="c1" style="top:300px"></div>
+  <div class="abs co" id="c2" style="top:300px"></div>
+  <div class="abs co" id="c3" style="top:300px"></div>
+</div>
+
+<!-- S4 -->
+<div class="scene" id="s4">
+  <div class="abs" id="s4grid"></div>
+  <div class="abs" id="s4h" style="left:140px;top:150px;width:1640px"></div>
+  <div id="cards"></div>
+</div>
+
+<!-- S5 -->
+<div class="scene" id="s5">
+  <div class="abs" id="s5glow"></div>
+  <div class="abs" id="s5h" style="left:0;top:110px;width:1920px;text-align:center"></div>
+  <svg class="abs" id="s5line" style="left:0;top:0" width="1920" height="1080"></svg>
+  <div id="devs"></div>
+  <div class="abs" id="s5sub" style="left:0;width:1920px;top:660px;text-align:center;font-size:34px;font-weight:600;color:#b3b3b3">Download free on</div>
+  <div id="badges5"></div>
+</div>
+
+<!-- S6 -->
+<div class="scene" id="s6">
+  <div class="abs mq" id="mq3" style="top:-10px">LISTEN FREE • LISTEN FREE • LISTEN FREE • LISTEN FREE • LISTEN FREE • LISTEN FREE •</div>
+  <div class="abs mq" id="mq4" style="top:900px">PLAY • DISCOVER • SHARE • PLAY • DISCOVER • SHARE • PLAY • DISCOVER • SHARE • PLAY •</div>
+  <svg class="abs" id="endlogo" viewBox="0 0 24 24"></svg>
+  <div class="abs" id="wm6wrap"><div id="wm6">Spotify</div></div>
+  <div class="abs" id="end1" style="left:0;width:1920px;top:560px;text-align:center"></div>
+  <div id="badges6"></div>
+</div>
+
+<div class="abs" id="flash"></div>
+</div>
+
+<script>
+// ---------- helpers ----------
+const $=id=>document.getElementById(id);
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const P=(t,a,b)=>clamp((t-a)/(b-a));
+const lerp=(a,b,x)=>a+(b-a)*x;
+const eo=x=>1-Math.pow(1-x,3);
+const eio=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;
+const ex=x=>x>=1?1:1-Math.pow(2,-10*x);
+const exio=x=>x<=0?0:x>=1?1:x<.5?Math.pow(2,20*x-10)/2:(2-Math.pow(2,-20*x+10))/2;
+const eb=x=>{const c1=1.9,c3=c1+1;return 1+c3*Math.pow(x-1,3)+c1*Math.pow(x-1,2)};
+const el=x=>x<=0?0:x>=1?1:Math.pow(2,-10*x)*Math.sin((x*10-.75)*(2*Math.PI)/3)+1;
+const tf=(e,o,x=0,y=0,s=1,r=0)=>{e.style.opacity=o;e.style.transform=`translate(${x}px,${y}px) scale(${s}) rotate(${r}deg)`;};
+const hex=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
+const mix=(a,b,x)=>{a=hex(a);b=hex(b);return `rgb(${a.map((v,i)=>Math.round(lerp(v,b[i],x))).join(',')})`};
+const BEAT=.5;
+const pulse=t=>{ if(t<4) return 0; const ph=((t-4)%BEAT)/BEAT; return Math.exp(-ph*7); };
+
+// window in/out for a text group: returns {o,y}
+function win(t,a,b,din=.45,dout=.25){
+  const i=ex(P(t,a,a+din)), o=eio(P(t,b-dout,b));
+  return {i,o,vis:t>=a&&t<b};
+}
+
+// ---------- logo ----------
+function logoSVG(circle,arcs){
+  return `<circle cx="12" cy="12" r="12" fill="${circle}" class="lc"/>
+  <g fill="none" stroke="${arcs}" stroke-linecap="round">
+   <path class="la" pathLength="1" stroke-width="2.25" d="M4.7 8.55 Q12 6.1 19.3 9.75"/>
+   <path class="la" pathLength="1" stroke-width="1.85" d="M5.5 12.25 Q12 10.3 18.2 13.3"/>
+   <path class="la" pathLength="1" stroke-width="1.45" d="M6.3 15.75 Q12 14.3 17.0 16.75"/>
+  </g>`;
+}
+$('logo1').innerHTML=logoSVG('#1ED760','#000');
+$('s2logo').innerHTML=logoSVG('#000','#1ED760');
+$('endlogo').innerHTML=logoSVG('#000','#1ED760');
+const logoMini=(c='#000',a='#1ED760',s=28)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24">${logoSVG(c,a)}</svg>`;
+
+// ---------- icons ----------
+const I={
+ home:'<path d="M3 10.5L12 3l9 7.5V21h-6v-6H9v6H3z"/>',
+ homeF:'<path fill="currentColor" d="M3 10.5L12 3l9 7.5V21h-6v-6H9v6H3z"/>',
+ search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',
+ lib:'<path d="M4 3v18M9 3v18M14 4l6 16"/>',
+ dl:'<circle cx="12" cy="12" r="10"/><path d="M12 7v9M8 12.5l4 4 4-4"/>',
+ mic:'<path d="M12 3a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3zM5 11a7 7 0 0 0 14 0M12 18v3"/>',
+ lyr:'<path d="M4 6h16M4 11h11M4 16h8"/><circle cx="18" cy="17" r="2.5"/><path d="M20.5 17V10"/>',
+ jam:'<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M16.5 14.5c2.8.2 4.5 2.5 4.5 5.5"/>',
+ conn:'<rect x="3" y="3" width="10" height="18" rx="2"/><circle cx="8" cy="14" r="2.5"/><path d="M17 8a5 5 0 0 1 0 8M19.8 5.3a8.8 8.8 0 0 1 0 13.4"/>',
+ heart:'<path d="M12 20s-7-4.4-9-8.5C1.6 8.4 3.6 5 7 5c2 0 3.5 1.2 5 3 1.5-1.8 3-3 5-3 3.4 0 5.4 3.4 4 6.5-2 4.1-9 8.5-9 8.5z"/>',
+ heartF:'<path fill="currentColor" d="M12 20s-7-4.4-9-8.5C1.6 8.4 3.6 5 7 5c2 0 3.5 1.2 5 3 1.5-1.8 3-3 5-3 3.4 0 5.4 3.4 4 6.5-2 4.1-9 8.5-9 8.5z"/>',
+ play:'<path fill="currentColor" stroke="none" d="M8 5v14l11-7z"/>',
+ pause:'<rect fill="currentColor" stroke="none" x="6.5" y="5" width="3.6" height="14" rx="1"/><rect fill="currentColor" stroke="none" x="13.9" y="5" width="3.6" height="14" rx="1"/>',
+ next:'<path fill="currentColor" d="M6 5.5v13l9-6.5z"/><path d="M18 5v14"/>',
+ prev:'<path fill="currentColor" d="M18 5.5v13l-9-6.5z"/><path d="M6 5v14"/>',
+ shuf:'<path d="M3 7h3.5l10 10H21M3 17h3.5l3-3M13.5 10l3-3H21M18 4l3 3-3 3M18 14l3 3-3 3"/>',
+ rep:'<path d="M4 12V9.5A3.5 3.5 0 0 1 7.5 6H20l-3-3M20 12v2.5a3.5 3.5 0 0 1-3.5 3.5H4l3 3"/>',
+ down:'<path d="M6 9l6 6 6-6"/>',
+ dots:'<circle fill="currentColor" cx="5" cy="12" r="1.3"/><circle fill="currentColor" cx="12" cy="12" r="1.3"/><circle fill="currentColor" cx="19" cy="12" r="1.3"/>',
+ share:'<path d="M12 3v12M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/>',
+ plus:'<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>',
+ cam:'<rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13.5" r="3.5"/><path d="M8.5 7l1.5-3h4l1.5 3"/>',
+ check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+ star:'<path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/>',
+ wave:'<path d="M3 12h2M7 8v8M11 5v14M15 9v6M19 7v10M21 12h0"/>',
+};
+const ic=(n,s=24,sw=2,c='currentColor')=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" class="ic" style="stroke-width:${sw};color:${c}">${I[n]}</svg>`;
+
+// ---------- album art generator ----------
+function art(c1,c2,kind,label=''){
+  let inner='';
+  if(kind==='heart') inner=`<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">${ic('heartF',28,2,'#fff')}</div>`;
+  if(kind==='sun') inner=`<div style="position:absolute;left:22%;top:18%;width:56%;height:56%;border-radius:50%;background:linear-gradient(#ffd36e,#ff5f6d)"></div>
+     <div style="position:absolute;left:0;right:0;top:58%;bottom:0;background:repeating-linear-gradient(180deg,rgba(0,0,0,.55) 0 3px,transparent 3px 9px)"></div>`;
+  if(kind==='rings') inner=`<div style="position:absolute;left:15%;top:15%;width:70%;height:70%;border-radius:50%;border:6px solid rgba(255,255,255,.35)"></div><div style="position:absolute;left:32%;top:32%;width:36%;height:36%;border-radius:50%;background:rgba(255,255,255,.5)"></div>`;
+  if(kind==='wave') inner=`<div style="position:absolute;left:10%;right:10%;top:35%;height:30%;display:flex;gap:6%;align-items:center">${[40,80,55,100,65,90,45].map(h=>`<i style="flex:1;height:${h}%;background:rgba(255,255,255,.7);border-radius:4px"></i>`).join('')}</div>`;
+  if(kind==='blob') inner=`<div style="position:absolute;left:-20%;top:40%;width:90%;height:90%;border-radius:50%;background:rgba(0,0,0,.25)"></div><div style="position:absolute;left:45%;top:-25%;width:80%;height:80%;border-radius:50%;background:rgba(255,255,255,.22)"></div>`;
+  return `<div class="art" style="background:linear-gradient(135deg,${c1},${c2})">${inner}${label?`<div class="tx">${label}</div>`:''}</div>`;
+}
+
+// ---------- status bar + nav ----------
+const sbar=`<div class="abs sb"><div class="t">9:41</div><div class="r">
+  <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1" fill="#fff"/><rect x="5" y="5" width="3" height="7" rx="1" fill="#fff"/><rect x="10" y="2.5" width="3" height="9.5" rx="1" fill="#fff"/><rect x="15" y="0" width="3" height="12" rx="1" fill="#fff"/></svg>
+  <svg width="27" height="13" viewBox="0 0 27 13"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="#fff" opacity=".5"/><rect x="2.5" y="2.5" width="17" height="8" rx="2" fill="#fff"/><rect x="25" y="4.5" width="1.5" height="4" rx=".7" fill="#fff" opacity=".5"/></svg></div></div>`;
+const nav=(on)=>`<div class="nav">
+  <div class="${on==0?'on':''}">${ic(on==0?'homeF':'home',24)}Home</div>
+  <div class="${on==1?'on':''}">${ic('search',24,on==1?2.8:2)}Search</div>
+  <div>${ic('lib',24)}Your Library</div>
+  <div>${logoMini('#b3b3b3','#000',24)}Premium</div></div>`;
+
+// ---------- HOME screen ----------
+const tiles=[['Liked Songs','#450af5','#c4efd9','heart'],['Daily Mix 1','#e8115b','#ff9a3c','sun'],['Discover Weekly','#1e3264','#509bf5','rings'],
+             ['Release Radar','#148a08','#a0c3d2','wave'],['Chill Vibes','#477d95','#c4efd9','blob'],['Bollywood Hits','#e91429','#f59b23','sun']];
+const mfy=[['Daily Mix 2','#8d67ab','#1e3264','blob','Daily Mix 2','Lofi, Jazz &amp; more'],['On Repeat','#1ed760','#056952','wave','On Repeat','Songs you love'],['Time Capsule','#ff6437','#b49bc8','rings','Time Capsule','Your throwbacks']];
+let H=sbar;
+H+=`<div class="abs hm-top" style="left:16px;top:58px;width:32px;height:32px;border-radius:50%;background:#e8115b;color:#000;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center">K</div>`;
+H+=`<div class="chip hm-top" style="left:58px;background:#1ED760;color:#000">All</div><div class="chip hm-top" style="left:114px">Music</div><div class="chip hm-top" style="left:192px">Podcasts</div>`;
+tiles.forEach((d,i)=>{const x=16+(i%2)*174,y=104+Math.floor(i/2)*62;H+=`<div class="tile hm-t" style="left:${x}px;top:${y}px"><div class="a">${art(d[1],d[2],d[3])}</div><div class="n">${d[0]}</div></div>`;});
+H+=`<div class="h hm-m" style="top:304px">Made For You</div>`;
+mfy.forEach((d,i)=>{H+=`<div class="card hm-c" style="left:${16+i*118}px;top:342px"><div class="a">${art(d[1],d[2],d[3],d[4])}</div><div class="n">${d[0]}</div><div class="s">${d[5]}</div></div>`});
+H+=`<div class="h hm-m2" style="top:510px">Recently played</div>`;
+[['#c3a6ff','#3b1366','Neon Avenue'],['#ff9a3c','#e8115b','Arjit Vibes'],['#509bf5','#0d1b3e','The Wavelength']].forEach((d,i)=>{
+ H+=`<div class="card hm-r" style="left:${16+i*118}px;top:546px;text-align:center"><div class="a" style="width:90px;height:90px;border-radius:50%;margin:0 auto">${art(d[0],d[1],'blob')}</div><div class="n" style="font-size:11.5px">${d[2]}</div><div class="s">Artist</div></div>`});
+H+=`<div class="mini" id="mini"><div class="abs" style="left:8px;top:8px;width:40px;height:40px;border-radius:4px;overflow:hidden">${art('#7b2ff7','#f107a3','sun')}</div>
+  <div class="abs" style="left:58px;top:10px;font-size:13px;font-weight:700">Midnight Drive</div><div class="abs" style="left:58px;top:29px;font-size:12px;color:#d6c3e6">Neon Avenue</div>
+  <div class="abs" style="right:52px;top:16px;color:#1ED760">${ic('conn',24)}</div><div class="abs" style="right:14px;top:14px">${ic('play',28)}</div>
+  <div class="abs" style="left:8px;right:8px;bottom:0;height:2px;background:rgba(255,255,255,.3)"><div id="miniP" style="width:30%;height:2px;background:#fff"></div></div></div>`;
+H+=nav(0);
+$('home').innerHTML=H;
+
+// ---------- NOW PLAYING ----------
+let N=sbar;
+N+=`<div class="abs" style="left:18px;top:58px">${ic('down',26)}</div><div class="abs" style="right:18px;top:58px">${ic('dots',26)}</div>
+<div class="abs" style="left:0;width:372px;top:56px;text-align:center"><div style="font-size:10px;letter-spacing:1.5px;font-weight:600">PLAYING FROM PLAYLIST</div><div style="font-size:13px;font-weight:800;margin-top:2px">Daily Mix 1</div></div>`;
+N+=`<div class="abs" id="npart">${art('#7b2ff7','#f107a3','sun')}<div class="abs" style="left:18px;bottom:16px;font-size:26px;font-weight:900;letter-spacing:-1px;line-height:26px;text-shadow:0 2px 8px rgba(0,0,0,.3)">MIDNIGHT<br>DRIVE</div></div>`;
+N+=`<div class="abs" style="left:24px;top:448px;font-size:24px;font-weight:800;letter-spacing:-.5px">Midnight Drive</div>
+<div class="abs" style="left:24px;top:482px;font-size:15px;color:#d6c3e6">Neon Avenue</div>
+<div class="abs" id="npheart" style="right:24px;top:458px"></div>`;
+N+=`<div class="abs prog"><div id="npbar" style="height:4px;border-radius:2px;background:#fff;width:30%"></div><div id="npknob" class="abs" style="top:-4px;width:12px;height:12px;border-radius:50%;background:#fff;margin-left:-6px"></div></div>
+<div class="abs" id="npt1" style="left:24px;top:540px;font-size:11px;color:#d6c3e6">1:04</div><div class="abs" style="right:24px;top:540px;font-size:11px;color:#d6c3e6">3:34</div>`;
+N+=`<div class="abs" style="left:24px;top:584px;color:#1ED760">${ic('shuf',26)}</div><div class="abs" style="left:94px;top:582px">${ic('prev',30)}</div>
+<div class="abs" id="npplay" style="left:154px;top:565px;width:64px;height:64px;border-radius:50%;background:#fff;color:#000;display:flex;align-items:center;justify-content:center">${ic('pause',30)}</div>
+<div class="abs" style="left:248px;top:582px">${ic('next',30)}</div><div class="abs" style="left:322px;top:584px;color:#d6c3e6">${ic('rep',26)}</div>`;
+N+=`<div class="abs" style="left:24px;top:648px;color:#1ED760">${ic('conn',20)}</div><div class="abs" style="right:24px;top:648px;color:#d6c3e6">${ic('share',20)}</div>`;
+N+=`<div class="abs lyr"><div style="font-size:14px;font-weight:800">Lyrics</div>
+ <div class="l" id="ly0">City lights are calling my name,</div><div class="l" id="ly1">driving through the midnight rain,</div><div class="l" id="ly2">turn it up, don't let it fade</div><div class="l" id="ly3">this is the sound we made</div></div>`;
+$('np').innerHTML=N;
+
+// ---------- SEARCH ----------
+const browse=[['Music','#dc148c','#ffc864'],['Podcasts','#006450','#c4efd9'],['Audiobooks','#1e3264','#509bf5'],['Live Events','#8400e7','#f037a5'],
+ ['Made For You','#1e3264','#1ed760'],['New Releases','#608108','#d7f27d'],['Bollywood','#e8115b','#ff9a3c'],['Hip-Hop','#bc5900','#000000'],
+ ['Chill','#477d95','#c4efd9'],['Workout','#777777','#e91429']];
+let S=sbar;
+S+=`<div class="abs" style="left:16px;top:56px;font-size:26px;font-weight:800;letter-spacing:-.5px">Search</div><div class="abs" style="right:18px;top:60px">${ic('cam',26)}</div>`;
+S+=`<div class="abs" style="left:16px;top:102px;width:340px;height:46px;border-radius:6px;background:#fff;color:#121212;display:flex;align-items:center;gap:10px;padding-left:12px;font-size:15px;font-weight:600">
+ ${ic('search',22,2.6,'#121212')}<span id="stype" style="color:#555">What do you want to listen to?</span></div>`;
+S+=`<div class="abs" style="left:16px;top:170px;font-size:16px;font-weight:800">Browse all</div>`;
+browse.forEach((d,i)=>{const x=16+(i%2)*174,y=200+Math.floor(i/2)*112;S+=`<div class="btile bt" style="left:${x}px;top:${y}px;background:${d[1]}"><b>${d[0]}</b><i style="background:linear-gradient(135deg,${d[2]},${d[1]})"></i></div>`});
+S+=nav(1);
+$('srch').innerHTML=S;
+
+// ---------- floating chips ----------
+$('flA').innerHTML=`<div style="width:52px;height:52px;border-radius:8px;overflow:hidden;position:relative">${art('#e8115b','#ff9a3c','sun')}</div><div>Daily Mix 1<small>Updated today · 50 songs</small></div>`;
+$('flB').innerHTML=`<div style="width:46px;height:46px;border-radius:50%;background:#1ED760;color:#000;display:flex;align-items:center;justify-content:center">${ic('dl',26,2.4)}</div><div>Downloaded<small>Listen offline, anywhere</small></div>`;
+$('flC').innerHTML=`<div style="color:#1ED760">${ic('heartF',34)}</div><div>Added to Liked Songs</div>`;
+$('flD').innerHTML=`<div style="width:46px;height:46px;border-radius:8px;background:linear-gradient(135deg,#8d67ab,#1e3264);display:flex;align-items:center;justify-content:center">${ic('wave',24)}</div><div>Lofi Beats<small>Trending playlist · 2.1M saves</small></div>`;
+
+// ---------- callouts ----------
+const co=(k,h,b,pills)=>`<div class="mask"><span class="k">${k}</span></div><div class="mask"><span class="hd">${h}</span></div><div class="mask"><span class="bd">${b}</span></div>
+ <div class="pl">${pills.map(p=>`<div>${ic(p[0],26,2.2,'#1ED760')}${p[1]}</div>`).join('')}</div>`;
+$('c1').innerHTML=co('01 — HOME','Made for you.','Daily Mixes, Discover Weekly and Release Radar — new music picked for your taste, every day.',[['star','Personalised'],['wave','Daily Mixes']]);
+$('c2').innerHTML=co('02 — PLAY','Play anything.','Real-time lyrics, high quality audio and offline downloads, right in your pocket.',[['lyr','Lyrics'],['dl','Offline'],['conn','Connect']]);
+$('c3').innerHTML=co('03 — SEARCH','Find your sound.','Explore every genre, mood and moment — from Bollywood to lofi beats.',[['search','Search'],['mic','Podcasts']]);
+
+// ---------- S4 cards ----------
+const feats=[['dl','Offline Mode','Download songs and listen without internet.'],['lyr','Live Lyrics','Sing along, line by line, in real time.'],['mic','Podcasts','Millions of shows on every topic.'],
+ ['jam','Jam','Listen together with friends, live.'],['conn','Spotify Connect','Switch between devices seamlessly.'],['heart','Made For You','Playlists that learn what you love.']];
+$('cards').innerHTML=feats.map((f,i)=>{const x=140+(i%3)*560,y=420+Math.floor(i/3)*250;
+ return `<div class="abs fc" style="left:${x}px;top:${y}px"><div class="ib">${ic(f[0],50,2.2,'#000')}</div><div class="t">${f[1]}</div><div class="d">${f[2]}</div><div class="sh"></div></div>`}).join('');
+$('s4h').innerHTML=`<div class="mask"><span style="font-size:110px;font-weight:900;letter-spacing:-5px;line-height:124px">Everything you love<span style="color:#1ED760">.</span></span></div>
+ <div class="mask"><span style="font-size:34px;font-weight:500;color:#b3b3b3;margin-top:10px">Packed with features that make every listen better.</span></div>`;
+
+// ---------- S5 devices ----------
+const D={
+ phone:'<rect x="15" y="4" width="18" height="40" rx="3.5"/><path d="M21.5 39h5"/>',
+ tablet:'<rect x="8" y="5" width="32" height="38" rx="3.5"/><path d="M22 38.5h4"/>',
+ laptop:'<rect x="9" y="10" width="30" height="20" rx="2"/><path d="M4 36h40l-3.5-6h-33z"/>',
+ tv:'<rect x="4" y="8" width="40" height="26" rx="2.5"/><path d="M16 42h16M24 34v8"/>',
+ speaker:'<rect x="12" y="4" width="24" height="40" rx="5"/><circle cx="24" cy="29" r="7"/><circle cx="24" cy="13.5" r="3"/>',
+ car:'<path d="M7 31v-7l4.4-9.3c.6-1.3 1.9-2.2 3.4-2.2h18.4c1.5 0 2.8.9 3.4 2.2L41 24v7zM7 31v5h6v-5M35 31v5h6v-5M9 24h30"/><circle cx="14" cy="27.5" r="1.6"/><circle cx="34" cy="27.5" r="1.6"/>',
+ watch:'<rect x="12" y="13" width="24" height="22" rx="6"/><path d="M17 13l1.4-8h11.2L31 13M17 35l1.4 8h11.2L31 35M24 19v5.5l3.5 2"/>'
+};
+const dvs=[['phone','Phone'],['tablet','Tablet'],['laptop','Desktop'],['tv','Smart TV'],['speaker','Speakers'],['car','Car'],['watch','Watch']];
+$('devs').innerHTML=dvs.map((d,i)=>`<div class="abs dv" style="left:${190+i*220}px;top:330px"><div class="dvi" style="width:130px;height:130px;margin:0 auto;border-radius:34px;background:#141414;border:1px solid #2a2a2a;display:flex;align-items:center;justify-content:center">
+ <svg width="76" height="76" viewBox="0 0 48 48" class="ic" style="stroke-width:2.2">${D[d[0]]}</svg></div><div>${d[1]}</div></div>`).join('');
+$('s5line').innerHTML=`<path id="dl" pathLength="1" d="M300 395 H1620" stroke="#1ED760" stroke-width="3" stroke-dasharray="1" fill="none" opacity=".5"/><circle id="dlDot" r="8" fill="#1ED760" cy="395" cx="300"/>`;
+$('s5h').innerHTML=`<div class="mask"><span style="font-size:104px;font-weight:900;letter-spacing:-5px;line-height:120px">Available on <span style="color:#1ED760">every device.</span></span></div>`;
+
+// ---------- store badges ----------
+const gplay=`<svg width="62" height="62" viewBox="0 0 24 24"><path d="M3 1.5L3 22.5L13 12z" fill="#00d7fe"/><path d="M3 1.5L13 12L16.5 9.375z" fill="#00f076"/><path d="M13 12L16.5 9.375L21 12L16.5 14.625z" fill="#ffc900"/><path d="M3 22.5L13 12L16.5 14.625z" fill="#ff3a44"/></svg>`;
+const apple=`<svg width="58" height="58" viewBox="0 0 24 24"><path fill="#fff" d="M16.4 12.6c0-2.4 2-3.5 2.1-3.6-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9-.8 0-1.9-.9-3.2-.8-1.6 0-3.1 1-4 2.4-1.7 3-.4 7.4 1.2 9.8.8 1.2 1.8 2.5 3 2.4 1.2 0 1.7-.8 3.1-.8 1.5 0 1.9.8 3.2.8 1.3 0 2.2-1.2 3-2.4.9-1.4 1.3-2.7 1.3-2.8 0 0-2.5-1-2.5-4zM14 5.3c.7-.8 1.1-1.9 1-3-1 0-2.1.7-2.8 1.5-.6.7-1.2 1.8-1 2.9 1.1.1 2.1-.6 2.8-1.4z"/></svg>`;
+const badgeG=`${gplay}<div><div class="sm">GET IT ON</div><div class="lg">Google Play</div></div>`;
+const badgeA=`${apple}<div><div class="sm">Download on the</div><div class="lg">App Store</div></div>`;
+$('badges5').innerHTML=`<div class="abs badge" id="b5g" style="left:530px;top:730px;width:410px">${badgeG}</div><div class="abs badge" id="b5a" style="left:980px;top:730px;width:410px">${badgeA}</div>`;
+$('badges6').innerHTML=`<div class="abs badge" id="b6g" style="left:530px;top:770px;width:410px;transform-origin:center">${badgeG}</div><div class="abs badge" id="b6a" style="left:980px;top:770px;width:410px">${badgeA}</div>`;
+$('end1').innerHTML=`<div class="mask"><span style="font-size:68px;font-weight:900;letter-spacing:-2px">Listen free. Download now.</span></div>`;
+
+// ---------- S1 eq bars & tagline ----------
+const NB=13; for(let i=0;i<NB;i++){const b=document.createElement('div');b.className='bar';b.style.left=(960-((NB*18+(NB-1)*12)/2)+i*30)+'px';$('eq').appendChild(b);}
+$('tag1').innerHTML='Music for everyone.'.split(' ').map(w=>`<span>${w}&nbsp;</span>`).join('');
+
+// ---------- layout measure ----------
+let W1,LX1,W6,LX6;
+function layout(){
+  $('s1').style.display='block';$('s6').style.display='block';
+  W1=$('wm1').getBoundingClientRect().width; const g1=240+44+W1; LX1=960-g1/2; // logo left
+  $('wm1wrap').style.left=(LX1+240+44)+'px'; $('wm1wrap').style.width=(W1+90)+'px';
+  W6=$('wm6').getBoundingClientRect().width; const g6=220+40+W6; LX6=960-g6/2;
+  $('endlogo').style.left=LX6+'px'; $('endlogo').style.top='280px';
+  $('wm6wrap').style.left=(LX6+260)+'px'; $('wm6wrap').style.top='290px'; $('wm6wrap').style.width=(W6+90)+'px';
+}
+
+// ---------- RENDER ----------
+const scenes=[['s1',0,4],['s2',4,8],['s3',8,18],['s4',18,23],['s5',23,27.4],['s6',27.4,30.1]];
+function maskSpans(root,t,a,b,stag=.08,din=.55,dout=.3){
+  const sp=root.querySelectorAll(':scope > .mask > span');
+  sp.forEach((s,i)=>{const w=win(t,a+i*stag,b,din,dout);s.style.transform=`translateY(${(1-w.i)*110 - w.o*110}%)`;});
+}
+function logoArcs(svg,t,a,stag=.1,d=.45){svg.querySelectorAll('.la').forEach((p,i)=>{const x=eo(P(t,a+i*stag,a+i*stag+d));p.style.strokeDasharray='1 1';p.style.strokeDashoffset=1-x;});}
+
+function render(t){
+  for(const [id,a,b] of scenes) $(id).style.display=(t>=a&&t<b)?'block':'none';
+  const pu=pulse(t);
+
+  // ===== S1 =====
+  if(t<4){
+    const env=eo(P(t,0,.5))*(1-eio(P(t,1.0,1.45)));
+    document.querySelectorAll('.bar').forEach((b,i)=>{const h=30+170*Math.abs(Math.sin(t*5.2+i*.62))*Math.abs(Math.cos(t*2.1+i*.3));b.style.height=(h*env+4)+'px';b.style.bottom=(540-(h*env+4)/2)+'px';b.style.opacity=env>0.02?1:0;});
+    const ls=eb(P(t,1.15,1.7));
+    const lx=lerp(0,LX1-840,eio(P(t,2.0,2.6)));
+    const beatS=1+.05*Math.exp(-((t-3.0)%.5)*8)*(t>2.9?1:0);
+    $('logo1').style.transform=`translate(${lx}px,0) scale(${ls*beatS}) rotate(${(1-eo(P(t,1.15,1.9)))*-120}deg)`;
+    $('logo1').style.opacity=ls>0?1:0;
+    logoArcs($('logo1'),t,1.45);
+    const wx=ex(P(t,2.15,2.85));
+    $('wm1').style.transform=`translateX(${(wx-1)*(W1+140)}px)`;$('wm1wrap').style.visibility=t>2.15?'visible':'hidden';
+    $('tag1').querySelectorAll('span').forEach((s,i)=>{const x=eo(P(t,2.75+i*.12,3.25+i*.12));s.style.opacity=x;s.style.transform=`translateY(${(1-x)*40}px)`;});
+    const bx=eio(P(t,3.55,4.0)); const bs=bx*32;
+    const cx=LX1+120, cy=470;
+    $('burst').style.transform=`translate(${cx-50}px,${cy-50}px) scale(${bs})`;
+  }
+
+  // ===== S2 =====
+  if(t>=4&&t<8){
+    $('mq1').style.transform=`translateX(${-200-(t-4)*160}px)`;
+    $('mq2').style.transform=`translateX(${-900+(t-4)*160}px)`;
+    $('s2logo').style.transform=`scale(${1+pu*.12})`;
+    logoArcs($('s2logo'),t,4.1);
+    const g=[['g1',4.0,5.3],['g2',5.3,6.6],['g3',6.6,7.75]];
+    g.forEach(([id,a,b])=>{const e=$(id);e.style.display=(t>=a&&t<b)?'block':'none';maskSpans(e,t,a,b,.09,.45,.22);
+      e.style.transform=`scale(${1+(t-a)*.04})`;});
+    $('n1').textContent=Math.round(100*ex(P(t,4.0,4.9)))+'M+';
+    $('n2').textContent=Math.round(6*ex(P(t,5.3,5.9)))+'M+';
+    const w=eio(P(t,7.6,8.0));
+    $('wipe2').style.transform=`translateY(${lerp(1500,-160,w)}px) rotate(-6deg)`;
+  }
+
+  // ===== S3 =====
+  if(t>=8&&t<18){
+    // glow color by screen
+    const c = t<11 ? '#1ED760' : t<14.5 ? mix('#1ED760','#9b3cf0',P(t,11,11.6)) : mix('#9b3cf0','#ff6437',P(t,14.5,15.1));
+    $('glow').style.background=c; $('glow').style.transform=`scale(${1+pu*.05})`;
+    $('glow2').style.transform=`translate(${Math.sin(t)*60}px,${Math.cos(t*.8)*40}px)`;
+    // phone
+    const pin=ex(P(t,8.0,8.9)), pout=eio(P(t,17.55,18.0));
+    const fy=Math.sin(t*1.6)*8;
+    $('phone').style.transform=`perspective(1600px) translate(${-pout*200}px,${(1-pin)*900+fy}px) rotateY(${(1-pin)*25+Math.sin(t*.9)*4 - pout*20}deg) rotateZ(${(1-pin)*-10}deg) scale(${1-pout*.25})`;
+    $('phone').style.opacity=1-pout;
+    // home
+    const hm=$('home');
+    const hIn=(sel,a,stag)=>hm.querySelectorAll(sel).forEach((e,i)=>{const x=eo(P(t,a+i*stag,a+i*stag+.45));e.style.opacity=x;e.style.transform=`translateY(${(1-x)*24}px)`;});
+    hIn('.hm-top',8.45,.05);hIn('.hm-t',8.55,.06);hIn('.hm-m',8.85,0);hIn('.hm-c',8.9,.08);hIn('.hm-m2',9.1,0);hIn('.hm-r',9.15,.08);
+    const mi=eo(P(t,9.4,9.8));$('mini').style.transform=`translateY(${(1-mi)*90}px)`;
+    $('miniP').style.width=(20+ (t-8)*1.5)+'%';
+    // Now playing slide up
+    const npx=exio(P(t,10.95,11.5));
+    $('np').style.transform=`translateY(${(1-npx)*802}px)`;
+    hm.style.transform=`scale(${1-npx*.06})`; hm.style.filter=`brightness(${1-npx*.5})`;
+    $('npart').style.transform=`scale(${1+pu*.025})`;
+    const pr=lerp(.30,.55,P(t,11,14.5));
+    $('npbar').style.width=pr*100+'%'; $('npknob').style.left=pr*324+'px';
+    const sec=Math.round(pr*214);$('npt1').textContent=Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0');
+    const liked=t>12.0; $('npheart').innerHTML=ic(liked?'heartF':'heart',28,2,liked?'#1ED760':'#fff');
+    $('npheart').style.transform=`scale(${liked?1+.5*Math.exp(-(t-12)*10)*Math.sin((t-12)*30)+0:1})`;
+    const ln=t<12.3?0:t<13.2?1:t<14.0?2:3;
+    for(let i=0;i<4;i++) $('ly'+i).style.color=i<=ln?'#fff':'rgba(0,0,0,.55)';
+    // search
+    const sx=exio(P(t,14.4,14.9));
+    $('srch').style.transform=`translateX(${(1-sx)*372}px)`;
+    $('np').style.filter=`brightness(${1-sx*.5})`;
+    $('srch').querySelectorAll('.bt').forEach((e,i)=>{const x=eb(P(t,14.65+i*.05,15.15+i*.05));e.style.transform=`scale(${.6+.4*x})`;e.style.opacity=clamp(x*1.5);});
+    const q='lofi beats', n=Math.floor(clamp((t-15.6)/0.7)*q.length);
+    $('stype').textContent= t<15.6?'What do you want to listen to?': q.slice(0,n)+((Math.floor(t*4)%2||n<q.length)?'|':'');
+    $('stype').style.color=t<15.6?'#555':'#121212';
+    // ripple taps
+    const rp=$('rip'); let rt=null,rxy=null;
+    if(t>=10.55&&t<11.0){rt=P(t,10.55,11.0);rxy=[264,159];}
+    if(t>=14.05&&t<14.5){rt=P(t,14.05,14.5);rxy=[139,760];}
+    if(rt!==null){rp.style.left=(rxy[0]-30)+'px';rp.style.top=(rxy[1]-30)+'px';rp.style.opacity=(1-rt)*.9;rp.style.transform=`scale(${.3+eo(rt)*1.6})`;}else rp.style.opacity=0;
+    // floating chips
+    const chip=(id,a,b,x,y,dx)=>{const w=win(t,a,b,.5,.3);const e=$(id);e.style.display=w.vis?'flex':'none';
+      e.style.left=x+'px';e.style.top=y+'px';e.style.opacity=w.i*(1-w.o);e.style.transform=`translate(${(1-eb(P(t,a,a+.6)))*dx}px,${Math.sin(t*2+x)*6 - w.o*30}px) scale(${.85+.15*eb(P(t,a,a+.6))})`;};
+    chip('flA',9.3,10.6,720,150,-80); chip('flB',12.3,14.35,190,700,80); chip('flC',12.0,14.35,690,330,-80); chip('flD',16.5,17.5,700,440,-80);
+    // callouts
+    [['c1',8.6,10.95],['c2',11.1,14.4],['c3',14.6,17.5]].forEach(([id,a,b])=>{const e=$(id);e.style.display=(t>=a&&t<b)?'block':'none';maskSpans(e,t,a,b,.09,.6,.3);
+      const pl=e.querySelector('.pl'); const x=eo(P(t,a+.45,a+.95)), o=eio(P(t,b-.3,b)); pl.style.opacity=x*(1-o); pl.style.transform=`translateY(${(1-x)*30}px)`;});
+  }
+
+  // ===== S4 =====
+  if(t>=18&&t<23){
+    const out=eio(P(t,22.55,23));
+    maskSpans($('s4h'),t,18.05,23.5,.12,.6,.3);
+    $('s4h').style.opacity=1-out;
+    $('s4grid').style.transform=`translateY(${-(t-18)*20}px)`;
+    $('cards').querySelectorAll('.fc').forEach((c,i)=>{const a=18.4+i*.1;const x=eb(P(t,a,a+.6));const o=eio(P(t,22.45+i*.03,22.85+i*.03));
+      c.style.opacity=clamp(P(t,a,a+.25))*(1-o);c.style.transform=`translateY(${(1-x)*140 - o*60}px) scale(${.9+.1*x - o*.05})`;
+      c.querySelector('.ib').style.transform=`scale(${eb(P(t,a+.2,a+.7))*(1+pulse(t)*.06)}) rotate(${(1-eo(P(t,a+.2,a+.8)))*-90}deg)`;
+      c.querySelector('.sh').style.left=lerp(-200,700,P(t,19.6+i*.12,20.4+i*.12))+'px';});
+  }
+
+  // ===== S5 =====
+  if(t>=23&&t<27.4){
+    const out=eio(P(t,27.1,27.4));
+    maskSpans($('s5h'),t,23.05,28,.1,.6,.3);
+    const lp=eio(P(t,23.4,24.6));
+    $('dl').style.strokeDashoffset=1-lp; $('dlDot').setAttribute('cx',300+lp*1320); $('dlDot').style.opacity=lp>0&&lp<1?1:0;
+    document.querySelectorAll('.dv').forEach((d,i)=>{const a=23.35+i*.09;const x=eb(P(t,a,a+.55));d.style.opacity=clamp(P(t,a,a+.2));d.style.transform=`translateY(${(1-x)*80 + Math.sin(t*2+i)*4}px) scale(${.7+.3*x})`;
+      const hit=Math.exp(-Math.max(0,t-(23.4+ (i/6)*1.2))*5)*(t>23.4+(i/6)*1.2?1:0);
+      d.querySelector('.dvi').style.borderColor=hit>.05?`rgba(30,215,96,${hit})`:'#2a2a2a';
+      d.querySelector('svg').style.color=hit>.2?'#1ED760':'#fff';});
+    const sb=eo(P(t,24.9,25.4)); $('s5sub').style.opacity=sb; $('s5sub').style.transform=`translateY(${(1-sb)*20}px)`;
+    ['b5g','b5a'].forEach((id,i)=>{const x=eb(P(t,25.1+i*.15,25.7+i*.15));const e=$(id);e.style.opacity=clamp(x*2);e.style.transform=`translateY(${(1-x)*60}px) scale(${(.6+.4*x)*(1+pu*.03)})`;
+      e.style.borderColor=t>25.9?'#1ED760':'#8a8a8a';});
+    $('s5').style.transform=`scale(${1+out*.25})`; $('s5').style.opacity=1-out;
+    $('s5glow').style.transform=`scale(${1+pu*.08})`;
+  }
+
+  // ===== S6 =====
+  if(t>=27.4){
+    $('mq3').style.transform=`translateX(${-300-(t-27.4)*120}px)`; $('mq4').style.transform=`translateX(${-800+(t-27.4)*120}px)`;
+    const ls=eb(P(t,27.5,28.0));
+    $('endlogo').style.transform=`scale(${ls*(1+pu*.06)}) rotate(${(1-eo(P(t,27.5,28.1)))*-120}deg)`;
+    logoArcs($('endlogo'),t,27.7,.08,.4);
+    const wx=ex(P(t,27.85,28.5)); $('wm6').style.transform=`translateX(${(wx-1)*(W6+140)}px)`;$('wm6wrap').style.visibility=t>27.85?'visible':'hidden';
+    maskSpans($('end1'),t,28.35,40,.1,.6,.3);
+    ['b6g','b6a'].forEach((id,i)=>{const x=eb(P(t,28.7+i*.15,29.25+i*.15));const e=$(id);e.style.opacity=clamp(x*2);e.style.transform=`translateY(${(1-x)*60}px) scale(${.6+.4*x})`;});
+  }
+  // flashes on cuts
+  const fl=[8.0,18.0,23.0,27.4].reduce((m,c)=>Math.max(m,t>=c?Math.exp(-(t-c)*9)*.35:0),0);
+  $('flash').style.opacity=fl;
+}
+window.render=render;
+document.fonts.ready.then(()=>{layout();render(0);window.READY=true;});
+// preview mode: ?play
+if(location.search.includes('play')){const st=performance.now();(function loop(){const t=((performance.now()-st)/1000)%30;if(window.READY)render(t);requestAnimationFrame(loop)})();}
+</script>
+</body>
+</html>
