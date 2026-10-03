@@ -10,8 +10,8 @@ Voice: Higgsfield TTS, ElevenLabs engine, voice "KARAN-1". Timing is in `vo_mix.
 | 3 | 10.0s | Split View (Maps + Messages) | ਇੱਕੋ ਵੇਲੇ ਦੋ ਐਪਾਂ — ਰਾਹ ਵੀ ਦੇਖੋ, ਗੱਲਾਂ ਵੀ ਕਰੋ। | |
 | 4 | 13.75s | A20 Pro chip | A20 Pro ਚਿੱਪ — ਤੇਜ਼ ਵੀ, ਠੰਡੀ ਵੀ। | J-cut |
 | 5 | 17.3s | Dual 48MP cameras | ਦੋ ਅਠਤਾਲੀ ਮੈਗਾਪਿਕਸਲ ਕੈਮਰੇ, ਫੋਰ-ਕੇ ਵੀਡੀਓ। | L-cut |
-| 6 | 20.85s | Titanium, hinge, Touch ID | ਟਾਈਟੇਨੀਅਮ ਦੀ ਬਾਡੀ, ਤੇ ਬਟਨ 'ਚ ਹੀ Touch ID। | |
-| 7 | 24.0s | 24 hrs · 3000 nits · 254 g | ਚੌਵੀ ਘੰਟੇ ਦੀ ਬੈਟਰੀ — ਚੱਕ ਦੇ ਫੱਟੇ! | |
+| 6 | 20.75s | Titanium, hinge, Touch ID | ਟਾਈਟੇਨੀਅਮ ਦੀ ਬਾਡੀ, ਤੇ ਬਟਨ 'ਚ ਹੀ Touch ID। | |
+| 7 | 24.2s | 24 hrs · 3000 nits · 254 g | ਚੌਵੀ ਘੰਟੇ ਦੀ ਬੈਟਰੀ — ਚੱਕ ਦੇ ਫੱਟੇ! | |
 | 8 | 27.1s | Star White & Night Sky | ਦੋ ਰੰਗ — ਸਟਾਰ ਵ੍ਹਾਈਟ ਤੇ ਨਾਈਟ ਸਕਾਈ। | |
 | 9 | 30.6s | End card | iPhone Duo. ਸੋਲਾਂ ਅਕਤੂਬਰ ਤੋਂ ਪ੍ਰੀ-ਆਰਡਰ। | L-cut into the fade-out |
 

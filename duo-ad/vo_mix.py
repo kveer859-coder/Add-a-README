@@ -6,7 +6,7 @@ J-cuts: lines 2 and 4 start just before their scene cut; L-cuts: lines 2, 5 and 
 """
 import subprocess
 
-S = [0.4, 3.3, 6.5, 10.0, 13.75, 17.3, 20.85, 24.0, 27.1, 30.6]
+S = [0.4, 3.3, 6.5, 10.0, 13.75, 17.3, 20.75, 24.2, 27.1, 30.6]
 WIN = [2.6, 2.9, 2.3, 3.6, 3.4, 3.5, 3.0, 2.8, 3.2, 3.6]
 DUR = 34.5
 
