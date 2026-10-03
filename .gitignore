@@ -1,3 +1,6 @@
-spotify-ad/video_noaudio.mp4
-spotify-ad/music.wav
+spotify-ad/*_noaudio.mp4
+spotify-ad/*.wav
+spotify-ad/final_part.mp4
+spotify-ad/bts_render.log
+spotify-ad/bts_sfx.json
 node_modules/
