@@ -27,6 +27,46 @@ Seedance's filter flagged words that aren't sexual but that it still treats as r
 
 ---
 
+## STILL BLOCKED? Test first, then use the ultra-safe version
+
+**Step 1: find the cause.** Run Part A **without** your face photo.
+- It passes → the **face photo** is the trigger. Seedance is very strict with real-person faces. Make a still image first (step 2).
+- It's still blocked → it's the **wording**. Use the ultra-safe prompts below.
+
+**Step 2: face workaround.** Make a still image of yourself in the makeup and suit with Nano Banana or Seedream, using your face photo and the prompt below. Then use that image as the **start frame** (image-to-video) in Seedance or Kling 3.0. Don't attach the raw face photo to Seedance.
+
+```
+Photorealistic 35mm film still, vertical 9:16. The man from the reference photo, same face, adult, 6 feet tall, lean athletic build, sitting at a backstage dressing-room vanity mirror with warm bulbs and a soft green fluorescent light. Theatrical stage makeup of a 1970s comedy performer: white face paint, blue diamond shapes above and below the eyes, small red nose dot, red smile line painted on the cheeks, slicked-back green-tinted hair. Wearing a red 1970s suit, mustard-yellow vest and teal-green collared shirt. Muted green tones, warm skin, soft bloom, fine film grain, low saturation, shallow depth of field.
+```
+
+### ULTRA-SAFE PART A (15s)
+
+```
+Vertical 9:16, 35mm film look, shallow depth of field. Muted green tones, cool shadows, warm skin tones, soft bloom, fine film grain, faded blacks, low saturation. Quiet indie drama mood.
+
+@hero: adult man, 6 feet tall, lean athletic build, wearing theatrical stage makeup of a 1970s comedy performer (white face paint, blue diamond shapes around the eyes, small red nose dot, red smile line on the cheeks, slicked-back green-tinted hair), a red 1970s suit, mustard-yellow vest and teal-green collared shirt.
+
+Shot 1 (0–4s): Backstage dressing room at night, vanity mirror with warm bulbs, soft green fluorescent light. Slow dolly push-in from behind as @hero sits at the mirror.
+Shot 2 (4–9s): Over-the-shoulder into the mirror, slow push-in. @hero looks at his reflection, smiles gently and says softly: "Is it just me… or is it getting crazier out there?"
+Shot 3 (9–15s): Slow gimbal arc. @hero stands and does a slow, graceful theatrical dance with open arms, then faces the camera in a close-up and says quietly: "All I have… are negative thoughts."
+```
+
+### ULTRA-SAFE PART B (15s)
+
+```
+Vertical 9:16, 35mm film look, shallow depth of field. Muted green tones, cool shadows, warm skin tones, soft bloom, fine film grain, faded blacks, low saturation. Quiet indie drama mood.
+
+@hero: adult man, 6 feet tall, lean athletic build, wearing theatrical stage makeup of a 1970s comedy performer (white face paint, blue diamond shapes around the eyes, small red nose dot, red smile line on the cheeks, slicked-back green-tinted hair), a red 1970s suit, mustard-yellow vest and teal-green collared shirt.
+
+Shot 1 (0–5s): Empty subway car at night, soft green light, passing tunnel lights on his face. Medium close-up, gentle handheld sway. @hero sits by the window, looks at the camera and says calmly: "For my whole life, I didn't know if I even really existed."
+Shot 2 (5–10s): Long outdoor stone staircase between old brick buildings at dusk. Low-angle wide shot, slow crane-down. @hero dances happily down the stairs, arms raised, rhythmic steps, jacket flaring.
+Shot 3 (10–15s): Close-up on the stairs, slow push-in, warm window bokeh. @hero says calmly: "I used to think my life was a tragedy… but now I realize, it's a comedy." He smiles warmly.
+```
+
+**If one line is the trigger**, swap it for a softer version:
+- "All I have… are negative thoughts." → "All I have… are these thoughts."
+- "…getting crazier out there?" → "…getting stranger out there?"
+
 ## MASTER PROMPT (30s, one block, filter-safe)
 
 ```
