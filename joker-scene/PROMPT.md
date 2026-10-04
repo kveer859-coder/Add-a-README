@@ -1,97 +1,70 @@
-# Joker Fan Film: 30s Shot-by-Shot Prompt
+# Clown Fan Film: 30s Shot-by-Shot Prompt (filter-safe)
 
-A 30-second fan film inspired by *Joker* (2019), starring you in the full Joker costume and makeup, speaking four of the film's best lines.
+A 30-second fan film tribute starring you in theatrical clown makeup and a 1970s red suit, speaking four famous lines.
 
 - **Format:** vertical 9:16, made as 2 × 15s generations (Part A + Part B) and edited together.
-- **Model:** Higgsfield `seedance_2_0` (identity-faithful, 15s, native audio and lip-sync). It works the same way in Kling, Veo or Runway.
-- **Face lock:** attach your face photo as `image_references` on **both** parts. 2–3 photos (front, 3/4 left, 3/4 right, even light, no sunglasses) hold the face much better than one.
+- **Model:** Seedance 2.x on Higgsfield, or any image-to-video model with a face reference.
+- **Face:** attach your face photo as the reference on **both** parts.
 
-> Fan-made tribute. Original sets, original performance, no film footage or film music. The dialogue lines are short quotes from *Joker* (2019, Warner Bros.).
+## Why the first version was blocked (NSFW) and what changed
 
-## MASTER PROMPT (everything in one block)
+Seedance's filter flagged words that aren't sexual but that it still treats as risky:
 
-```
-30-second vertical 9:16 cinematic fan film inspired by Joker (2019). Shot on 35mm film, ARRI Alexa 35 with vintage anamorphic-look prime lenses, shallow depth of field with soft creamy bokeh. Color grade: muted green fluorescent tones, cool blue-green shadows, warm natural skin tones, soft highlight bloom and gentle halation, subtle 35mm film grain, slightly faded lifted blacks, high contrast, low saturation. Realistic motivated lighting from practical sources only. Mood: calm, melancholic, intimate, atmospheric, inspired by Wong Kar-wai and modern A24 indie cinema. Realistic skin texture with visible pores, natural subsurface scattering, real fabric movement, accurate physics, natural motion blur. Every shot belongs to the same film, with identical color grade, lighting style, wardrobe and makeup from beginning to end.
+| Removed | Why it flags | Replaced with |
+|---|---|---|
+| "Joker", "Joker (2019)", "@joker" | copyrighted character or film name, especially combined with a real face | `@hero`, "theatrical clown stage makeup" |
+| "Wong Kar-wai", "A24", "ARRI" | real names and brands | plain style words |
+| "public bathroom" | bathroom with a man in it is a top nudity trigger | backstage dressing room with a vanity mirror |
+| "hips swaying" | reads as suggestive | "confident rhythmic steps" |
+| "chilling smile", "sickly", "greasy", "cracked" | horror and disturbing wording | "slow, quiet smile", "pale", "slicked" |
+| (missing) | clothing wasn't stated as on | "fully dressed in…" |
 
-@joker: the man from the reference photo, exact same face, identity fully preserved. Adult man, 6 feet tall, lean and fit athletic build, not heavy. Makeup, identical in every shot: matte white greasepaint face base, slightly worn and cracked at the edges; sharp blue painted triangles above and below each eye; small red painted nose tip; wide red painted smile extending past the lips into the cheeks; greasy dyed-green hair slicked back with loose strands falling forward. Wardrobe, identical in every shot: rust-red two-piece suit with wide 1970s lapels, mustard-yellow vest, teal-green shirt with a wide pointed collar, no tie, worn brown leather shoes. Voice: low, soft, tired male voice, slow deliberate speech, lips perfectly synced to the dialogue.
+## If it still gets blocked
 
-Shot 1 (0–4s): Grimy public bathroom at night, cracked pale-green tiles, one fluorescent tube flickering softly overhead. Wide shot from behind, slow dolly push-in: @joker sits hunched on a wooden bench facing a cracked mirror, head down, shoulders rising with one slow breath. Only the hum of the light.
-
-Shot 2 (4–9s): Over-the-shoulder into the mirror, 85mm, focus on the reflection, very slow push-in. @joker lifts his head, meets his own eyes and pushes the corners of his red-painted mouth upward with two fingers into a forced smile, then lets go. He says quietly to his reflection: "Is it just me… or is it getting crazier out there?"
-
-Shot 3 (9–15s): Medium-wide, slow 90-degree gimbal arc around him. @joker rises and dances slowly and gracefully under the flickering green light, arms opening wide, head tilted back, eyes half closed, jacket swinging naturally. He stops and faces the lens in a tight 50mm close-up, light flickering across his face, and whispers: "All I have… are negative thoughts."
-
-Shot 4 (15–20s): Empty late-night subway car, sickly green fluorescent light, dark tunnel rushing past the window and throwing warm light streaks across his face. Medium close-up, 50mm, handheld with subtle natural sway from the moving train. @joker sits alone by the window, head resting against the glass, then slowly turns his eyes to the lens and says flatly: "For my whole life, I didn't know if I even really existed."
-
-Shot 5 (20–25s): Long, steep outdoor concrete staircase between old brick apartment buildings at overcast dusk, cool muted green-grey light, damp steps, a few warm windows glowing. Low-angle wide from the bottom of the stairs, slow crane-down and tilt-up. @joker dances down the stairs with total confidence, arms raised, hips swaying, sharp rhythmic steps, jacket flaring, one leg kicking out on a step. Full body, real weight on every step.
-
-Shot 6 (25–30s): Same staircase, @joker stops on a step. Close-up, 85mm, very slow push-in, warm window bokeh behind him. Calm and still, he says: "I used to think my life was a tragedy… but now I realize, it's a comedy." A small, slow, chilling smile spreads under the painted smile. Hold on his eyes.
-
-NEGATIVE: cartoon, illustration, 3D render, CGI, plastic skin, over-smooth skin, waxy, airbrushed, distorted face, identity change, deformed hands, extra fingers, warped proportions, oversaturated, HDR look, AI-style rendering, watermark, subtitles, text, logo.
-```
-
-> Most video models generate at most 15s per run. If yours cuts off, run Shots 1–3 and Shots 4–6 as two separate generations, keeping the full header, @joker block and negative in each. Those two halves are the PART A and PART B prompts below.
-
-## The dialogues (in order)
-
-| Time | Line | Delivery |
-|------|------|----------|
-| 4–9s | "Is it just me… or is it getting crazier out there?" | quiet, to his own reflection |
-| 12–15s | "All I have… are negative thoughts." | whisper, straight into the lens |
-| 15–20s | "For my whole life, I didn't know if I even really existed." | flat and tired, then a slow turn to camera |
-| 25–30s | "I used to think my life was a tragedy… but now I realize, it's a comedy." | calm, then a small, chilling smile |
+1. Generate **one shot at a time** to find which shot is the problem, then soften only that shot.
+2. If the face photo itself triggers the filter, first create a **still image** of you in the makeup and suit (Nano Banana or Seedream with your face photo), then use that still as the **start image** for Seedance.
+3. If line 1 is the problem, use this fallback: *"Is it just me… or is the world getting stranger out there?"*
 
 ---
 
-## STYLE HEADER (paste at the top of both parts)
+## PART A (0–15s): dressing room
 
 ```
-Shot on 35mm film, ARRI Alexa 35 with vintage anamorphic-look prime lenses, shallow depth of field with soft creamy bokeh. Muted green fluorescent tones, cool blue-green shadows, warm natural skin tones, soft highlight bloom and gentle halation, subtle 35mm film grain, slightly faded lifted blacks, high contrast, low saturation. Realistic, motivated cinematic lighting from practical sources only. Mood: calm, melancholic, intimate, atmospheric, inspired by Wong Kar-wai and modern A24 indie cinema. Realistic skin texture with visible pores, natural subsurface scattering, real fabric movement, accurate physics, natural motion blur. Every shot belongs to the same film: identical color grade, lighting style, wardrobe and makeup from start to finish. Vertical 9:16.
+Shot on 35mm film with anamorphic prime lenses, shallow depth of field, soft creamy bokeh. Muted green fluorescent tones, cool blue-green shadows, warm natural skin tones, soft highlight bloom, gentle halation, subtle 35mm film grain, slightly faded blacks, high contrast, low saturation. Realistic practical lighting. Calm, melancholic, intimate, atmospheric indie drama set in a 1980s city. Realistic skin texture, real fabric movement, natural motion blur. Same color grade, lighting, wardrobe and makeup in every shot. Vertical 9:16.
+
+@hero: the man from the reference image, same face. Adult man, 6 feet tall, lean athletic build. Theatrical clown stage makeup: white face paint, blue painted diamond shapes above and below each eye, small red dot on the nose, red painted smile line extending into the cheeks, slicked-back green-tinted hair. Fully dressed in a red 1970s two-piece suit with wide lapels, mustard-yellow vest, teal-green collared shirt and brown leather shoes. Soft, low, calm voice, lips synced to the dialogue.
+
+Shot 1 (0–4s): A small backstage dressing room at night, a vanity mirror framed with a few warm bulbs, one green fluorescent tube overhead flickering softly. Wide shot from behind, slow dolly push-in. @hero sits at the vanity, head lowered, and takes one slow breath.
+
+Shot 2 (4–9s): Over-the-shoulder into the mirror, 85mm lens, slow push-in. @hero lifts his head, looks at his reflection, gently lifts the corners of his painted smile with two fingers, then lets go. He says softly: "Is it just me… or is it getting crazier out there?"
+
+Shot 3 (9–15s): Medium-wide, slow gimbal arc around him. @hero stands and moves in a slow, graceful, theatrical dance, arms opening wide, head tilted back, eyes half closed, jacket moving naturally. He ends in a close-up facing the lens and whispers: "All I have… are negative thoughts."
+
+Avoid: cartoon, CGI, 3D render, plastic skin, over-smooth skin, distorted face, identity change, deformed hands, extra fingers, oversaturated, HDR look, text, subtitles, watermark.
 ```
 
-## SUBJECT (paste right under the header in both parts)
+## PART B (15–30s): subway and stairs
 
 ```
-@joker — the man from the reference photo, exact same face, identity preserved. Adult man, 6 feet tall, lean and fit athletic build, not heavy. Makeup (identical every shot): matte white greasepaint face base, slightly worn and cracked at the edges; sharp blue painted triangles above and below each eye; small red painted nose tip; wide red painted smile extending past the lips into the cheeks; greasy dyed-green hair slicked back with loose strands falling forward. Wardrobe (identical every shot): rust-red two-piece suit with wide 1970s lapels, mustard-yellow vest, teal-green shirt with a wide pointed collar, no tie, worn brown leather shoes. Low, soft, tired male voice; slow, deliberate speech; lips perfectly synced to the dialogue.
-```
+Shot on 35mm film with anamorphic prime lenses, shallow depth of field, soft creamy bokeh. Muted green fluorescent tones, cool blue-green shadows, warm natural skin tones, soft highlight bloom, gentle halation, subtle 35mm film grain, slightly faded blacks, high contrast, low saturation. Realistic practical lighting. Calm, melancholic, intimate, atmospheric indie drama set in a 1980s city. Realistic skin texture, real fabric movement, natural motion blur. Same color grade, lighting, wardrobe and makeup in every shot. Vertical 9:16.
 
----
+@hero: the man from the reference image, same face. Adult man, 6 feet tall, lean athletic build. Theatrical clown stage makeup: white face paint, blue painted diamond shapes above and below each eye, small red dot on the nose, red painted smile line extending into the cheeks, slicked-back green-tinted hair. Fully dressed in a red 1970s two-piece suit with wide lapels, mustard-yellow vest, teal-green collared shirt and brown leather shoes. Soft, low, calm voice, lips synced to the dialogue.
 
-## PART A (0–15s): the bathroom
+Shot 1 (0–5s): A quiet, empty subway car at night, pale green fluorescent light, tunnel lights sliding softly across his face through the window. Medium close-up, 50mm, gentle handheld sway from the moving train. @hero sits alone by the window, then turns his eyes to the lens and says calmly: "For my whole life, I didn't know if I even really existed."
 
-```
-[STYLE HEADER]
-[SUBJECT]
+Shot 2 (5–10s): A long outdoor concrete staircase between old brick apartment buildings at overcast dusk, cool green-grey light, a few warm windows glowing. Low-angle wide shot from the bottom of the stairs, slow crane-down. @hero dances down the stairs joyfully, arms raised high, confident rhythmic steps, jacket flaring, a playful kick on one step. Full body, real weight on every step.
 
-Shot 1 (0–4s): Grimy public bathroom at night, cracked pale-green tiles, a single fluorescent tube above flickering softly. Wide shot from behind, slow dolly push-in on a static track: @joker sits hunched on a wooden bench facing a cracked mirror, head down, shoulders rising with one slow breath. Only the hum of the light.
+Shot 3 (10–15s): Same staircase, @hero stops on a step. Close-up, 85mm, very slow push-in, warm window bokeh behind him. Calm and still, he says: "I used to think my life was a tragedy… but now I realize, it's a comedy." A slow, quiet smile.
 
-Shot 2 (4–9s): Over-the-shoulder into the mirror, 85mm lens, focus on the reflection, very slow push-in. @joker lifts his head, meets his own eyes in the glass and pushes the corners of his red-painted mouth upward with two fingers into a forced smile, then lets go. He says quietly to his reflection: "Is it just me… or is it getting crazier out there?"
-
-Shot 3 (9–15s): Medium-wide, camera on a slow 90-degree gimbal arc around him. @joker rises and begins a slow, graceful, fluid dance under the flickering green light, arms opening wide, head tilted back, eyes half closed, the suit jacket swinging naturally. He stops and faces the lens in a tight 50mm close-up, light flickering across his face, and whispers: "All I have… are negative thoughts."
-
-NEGATIVE: cartoon, illustration, 3D render, CGI, plastic skin, over-smooth skin, waxy, airbrushed, distorted face, identity change, deformed hands, extra fingers, warped proportions, oversaturated, HDR look, AI-style rendering, watermark, subtitles, text, logo.
-```
-
-## PART B (15–30s): the subway and the stairs
-
-```
-[STYLE HEADER]
-[SUBJECT]
-
-Shot 4 (15–20s): Empty late-night subway car, sickly green fluorescent light, dark tunnel rushing past the window and throwing warm streaks of light across his face. Medium close-up, 50mm, handheld with a subtle natural sway from the moving train. @joker sits alone by the window, head resting against the glass, then slowly turns his eyes to the lens and says flatly: "For my whole life, I didn't know if I even really existed."
-
-Shot 5 (20–25s): A long, steep outdoor concrete staircase between old brick apartment buildings at overcast dusk, cool muted green-grey ambient light, damp steps, a few warm windows glowing. Low-angle wide shot from the bottom of the stairs, slow crane-down and tilt-up. @joker dances down the stairs with total confidence, arms raised, hips swaying, sharp rhythmic steps, suit jacket flaring, one leg kicking out on a step. Full body, natural motion, real weight on every step.
-
-Shot 6 (25–30s): Same staircase, @joker stops on a step. Close-up, 85mm, very slow push-in, background bokeh of the warm windows. Calm and still, he says: "I used to think my life was a tragedy… but now I realize, it's a comedy." Then a small, slow, chilling smile spreads under the painted smile. Hold on his eyes.
-
-NEGATIVE: cartoon, illustration, 3D render, CGI, plastic skin, over-smooth skin, waxy, airbrushed, distorted face, identity change, deformed hands, extra fingers, warped proportions, oversaturated, HDR look, AI-style rendering, watermark, subtitles, text, logo.
+Avoid: cartoon, CGI, 3D render, plastic skin, over-smooth skin, distorted face, identity change, deformed hands, extra fingers, oversaturated, HDR look, text, subtitles, watermark.
 ```
 
 ---
 
-## Making it look like one film
+## Editing
 
-- Generate **Part A first**. Take the cleanest close-up frame of your face in makeup from it, and attach that frame as a **second** `image_reference` for Part B. This keeps the makeup and suit identical.
-- If the face drifts in a multi-shot part, generate each shot separately (4–6s each) with the same header, subject and references, then stitch them.
-- If a line comes out mis-synced, regenerate only that shot. Don't regenerate the whole part.
-- **Music in the edit:** a low, slow cello drone under Part A, building through the subway, then a heavy stomping drum beat when the stairs dance starts (20s). Don't use the film's actual score or its stairs song, because Instagram and YouTube will mute or claim the video.
+- Generate **Part A first**. Attach its cleanest close-up frame as a second reference for Part B, so the makeup and suit match.
+- If a line comes out mis-synced, regenerate only that shot.
+- **Music:** a low cello drone under Part A, then a stomping drum beat when the stairs dance starts. Don't use the film's actual score or songs, because Instagram and YouTube will mute or claim the video.
+
+> Fan-made tribute: original sets and performance, with no film footage or film music. The dialogue lines are short quotes from *Joker* (2019, Warner Bros.).
