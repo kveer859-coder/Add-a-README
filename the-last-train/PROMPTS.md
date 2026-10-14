@@ -33,3 +33,48 @@ NEGATIVE: cartoon, illustration, 3d render, anime, CGI, video game, plastic skin
 ```
 
 **Continuity into Scene 2:** Scene 2 opens inside the same carriage (worn orange seats, sickly yellow flickering light, six bowed wet passengers), @Ethan in the same outfit, train moving through the black tunnel.
+
+---
+
+## Reference sheets (attach in every scene)
+
+| Ref | Character | Higgsfield job |
+|---|---|---|
+| image 1 | @Ethan Carter (lead, the user) | `bf922cfb-4d3f-4d9d-adcb-1f8e2a18dd6f` |
+| image 2 | @Walter Hayes (old ghost passenger) | `62314fd6-c2bb-459f-a2ad-b72ba0736a50` |
+| image 3 | @Conductor | `16edcf48-151b-445e-a719-881aa13cb1f3` |
+| video 1 | Scene 1 render (location / train / grade lock) | `9b689bb9-2bab-4a44-ad20-3bf3654b4357` |
+
+Scenes 2–4 use the same STYLE HEADER, @Ethan block and NEGATIVE as Scene 1, plus the three refs and Scene 1 as `video_references`. The full prompt text of each scene is stored in its Higgsfield job params.
+
+## Scene 2 (0:30–1:00) — "Tickets, please" — job `ee1a9f58-d623-4b4f-9c5e-64eda4a5fc5f`
+1. 0–4s Ethan walks between bowed wet passengers, sits on orange seat
+2. 4–9s Walter (opposite): "You shouldn't be here, son. This train doesn't stop for the living."
+3. 9–13s Ethan close-up, turns to the dark window
+4. 13–17s Reflection: passengers ghost-pale, staring — real carriage: still bowed
+5. 17–21s Conductor enters, lights die with each step, ticket-punch clicks
+6. 21–24s Conductor towers: "Tickets, please."
+7. 24–27s Insert: ticket "14 OCT 1987 — ONE WAY"
+8. 27–30s Smile stretches: "It is now, Mr. Carter." → lights out
+
+## Scene 3 (1:00–1:30) — "Run" — job `8296bcb9-5d3f-47f0-b6fe-7aa788eac190`
+1. 0–4s All passengers lift heads together, white eyes
+2. 4–8s Handheld chase down the aisle
+3. 8–11s Connecting door opens — Conductor already there
+4. 11–16s Walter, watch stopped at 11:59: "The emergency brake! Pull it before midnight — or you ride forever, like us!"
+5. 16–19s Clock 11:59:50
+6. 19–23s Conductor's fingers reach for his shoulder; Ethan spots red brake handle
+7. 23–27s Ethan yanks the brake — sparks, screech, jolt
+8. 27–30s 12:00 — white flash → black, silence
+
+## Scene 4 (1:30–2:00) — "One Way" — job `f7054b67-6972-42fc-abf1-50d5f6e4a013`
+1. 0–5s Ethan gasps awake on the foggy empty platform
+2. 5–8s "It was a dream... just a dream."
+3. 8–12s Guard Frank mutters: "Thirty-nine years tonight... the Midnight Express. Nobody ever made it home."
+4. 12–17s Memorial plaque "IN MEMORY — 14 OCTOBER 1987" … WALTER HAYES … freshly engraved "ETHAN CARTER"
+5. 17–21s Ethan's hand passes through Frank's arm
+6. 21–24s Puddle: Frank reflected, Ethan has no reflection
+7. 24–28s Train returns; Conductor: "You missed your stop, Mr. Carter... your seat is still warm." Walter shakes his head
+8. 28–30s Ethan's terrified face → smash cut to black, boom
+
+> Story note: Scene 3 ending changed from jumping off a bridge to pulling the emergency brake (same beat, safer for the video model's content filter). Years since the crash corrected to 39 (1987 → 2026).
